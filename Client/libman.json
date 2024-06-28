@@ -1,0 +1,42 @@
+{
+  "version": "1.0",
+  "defaultProvider": "cdnjs",
+  "libraries": [
+    {
+      "library": "animate.css@4.1.1",
+      "destination": "wwwroot/Libraries/animate.css/"
+    },
+    {
+      "library": "OwlCarousel2@2.3.4",
+      "destination": "wwwroot/Libraries/OwlCarousel2/"
+    },
+    {
+      "library": "waypoints@4.0.1",
+      "destination": "wwwroot/Libraries/waypoints/"
+    },
+    {
+      "library": "wow@1.1.2",
+      "destination": "wwwroot/Libraries/wow/"
+    },
+    {
+      "library": "jquery-easing@1.4.1",
+      "destination": "wwwroot/Libraries/jquery-easing/"
+    },
+    {
+      "library": "bootstrap-icons@1.11.3",
+      "destination": "wwwroot/Libraries/bootstrap-icons/"
+    },
+    {
+      "library": "jquery@3.7.1",
+      "destination": "wwwroot/Libraries/jquery/"
+    },
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/Libraries/bootstrap/"
+    },
+    {
+      "library": "font-awesome@6.5.2",
+      "destination": "wwwroot/Libraries/font-awesome/"
+    }
+  ]
+}
