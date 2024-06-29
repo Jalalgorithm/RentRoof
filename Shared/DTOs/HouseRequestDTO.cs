@@ -4,12 +4,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentHome.Shared.Models
+namespace RentHome.Shared.DTOs
 {
-    public class House
+    public class HouseRequestDTO
     {
-        public int Id { get; set; }
         public string? Name { get; set; }
+
         public string? Mode { get; set; }
         public string? Type { get; set; }
         public string? Location { get; set; }
@@ -18,6 +18,5 @@ namespace RentHome.Shared.Models
         public int NumberOfBedroom { get; set; }
         public int NumberOfBathroom { get; set; }
         public string? Image { get; set; }
-        public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }

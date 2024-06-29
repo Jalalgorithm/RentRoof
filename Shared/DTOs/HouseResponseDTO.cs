@@ -4,12 +4,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace RentHome.Shared.Models
+namespace RentHome.Shared.DTOs
 {
-    public class House
+    public class HouseResponseDTO
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+
         public string? Mode { get; set; }
         public string? Type { get; set; }
         public string? Location { get; set; }

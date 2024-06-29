@@ -12,5 +12,15 @@ namespace RentHome.Server.Data
         }
 
         public DbSet<House>  Houses { get; set; }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+
+
+            modelBuilder.Entity<House>()
+                .Property(p => p.Price)
+                .HasColumnType("decimal(16,2)");
+        }
     }
 }
