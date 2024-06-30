@@ -42,7 +42,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 NumberOfBedroom = houseRequestDTO.NumberOfBedroom,
                 NumberOfBathroom = houseRequestDTO.NumberOfBathroom,
                 Price = houseRequestDTO.Price,
-                Mode = houseRequestDTO.Mode,
+                ModeId = houseRequestDTO.ModeId,
                 Type = houseRequestDTO.Type,
                 Size = houseRequestDTO.Size,
                 Location = houseRequestDTO.Location,
@@ -88,18 +88,21 @@ namespace RentHome.Server.Repositories.HouseRepositories
         public async Task<List<HouseResponseDTO>> GetHouseData()
         {
             var result = await _context.Houses
+                .Include(m=>m.Mode)
                 .Select(houseResponse=> new HouseResponseDTO
                 {
                     Id= houseResponse.Id,
                     Name =houseResponse.Name,
                     Size =houseResponse.Size,
+                    Price = houseResponse.Price,
                     NumberOfBathroom = houseResponse.NumberOfBathroom,
                     NumberOfBedroom = houseResponse.NumberOfBedroom,
                     Location = houseResponse.Location,
-                    Mode = houseResponse.Mode,
+                    Mode = houseResponse.Mode.Name,
                     Image = houseResponse.Image,
                     DateCreated = houseResponse.DateCreated,
-                    Type = houseResponse.Type
+                    Type = houseResponse.Type,
+                    ModeId = houseResponse.ModeId
                 })
                 .ToListAsync();
 
@@ -112,6 +115,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
         public async Task<HouseResponseDTO> GetHouseDataById(int id)
         {
             var house = await _context.Houses
+                .Include(m=>m.Mode)
                 .Select(mainHouse=> new HouseResponseDTO
                 {
                     Id=mainHouse.Id,
@@ -121,7 +125,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
                     NumberOfBathroom = mainHouse.NumberOfBathroom,
                     NumberOfBedroom = mainHouse.NumberOfBedroom,
                     Location = mainHouse.Location,
-                    Mode = mainHouse.Mode,
+                    Mode = mainHouse.Mode.Name,
                     Type = mainHouse.Type,
                     Image = mainHouse.Image
                 })
@@ -158,7 +162,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
 
             mainHouse.Name = houseRequestDTO.Name;
             mainHouse.Location = houseRequestDTO.Location;
-            mainHouse.Mode = houseRequestDTO.Mode;
+            mainHouse.ModeId = houseRequestDTO.ModeId;
             mainHouse.NumberOfBathroom = houseRequestDTO.NumberOfBathroom;
             mainHouse.NumberOfBedroom = houseRequestDTO.NumberOfBedroom;
             mainHouse.Price = houseRequestDTO.Price;

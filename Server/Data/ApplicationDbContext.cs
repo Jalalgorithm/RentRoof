@@ -12,6 +12,7 @@ namespace RentHome.Server.Data
         }
 
         public DbSet<House>  Houses { get; set; }
+        public DbSet<Mode> Modes { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

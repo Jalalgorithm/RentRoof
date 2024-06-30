@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.HouseRepositories;
+using RentHome.Server.Repositories.ModeRepositories;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,7 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 });
 
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
+builder.Services.AddScoped<IModeRepo, ModeRepo>();
 
 var app = builder.Build();
 
