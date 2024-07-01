@@ -37,6 +37,10 @@
     {
       "library": "font-awesome@6.5.2",
       "destination": "wwwroot/Libraries/font-awesome/"
+    },
+    {
+      "library": "mdbootstrap@4.20.0",
+      "destination": "wwwroot/Libraries/mdbootstrap/"
     }
   ]
 }
