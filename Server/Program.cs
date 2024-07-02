@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using RentHome.Server.Data;
+using RentHome.Server.Repositories.AccountRepositories;
 using RentHome.Server.Repositories.HouseRepositories;
 using RentHome.Server.Repositories.ModeRepositories;
 using System.Text;
@@ -33,9 +34,10 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!))
     };
 });
-
+builder.Services.AddAuthorization(); 
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IModeRepo, ModeRepo>();
+builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
 var app = builder.Build();
 

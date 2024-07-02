@@ -44,7 +44,20 @@
                 <a href="contact" class="nav-item nav-link">Contact</a>
             </div>
 
-            <NavLink  href="property-add" class="btn btn-primary px-3 d-none d-lg-flex ">Add Property</NavLink>
+          <AuthorizeView>
+              <Authorized>
+                    <NavLink href="property-add" class="btn btn-primary px-3 d-none d-lg-flex ">Add Property</NavLink>
+
+              </Authorized>
+          </AuthorizeView>
+                
+          <AuthorizeView>
+              <NotAuthorized>
+                    <NavLink href="userlogin" class="btn btn-primary px-3 d-none d-lg-flex ">Login</NavLink>
+
+              </NotAuthorized>
+          </AuthorizeView>
+
         </div>
     </nav>
 </div>

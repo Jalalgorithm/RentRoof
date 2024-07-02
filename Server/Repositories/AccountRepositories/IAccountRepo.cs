@@ -7,6 +7,6 @@ namespace RentHome.Server.Repositories.AccountRepositories
     {
         Task<Response> Register(UserRegisterDTO userRegister);
         Task<Response> Login(UserLoginDTO userLogin);
-        Task<Response> GetProfile();
+        Task<UserResponseDTO> GetProfile(int id);
     }
 }
