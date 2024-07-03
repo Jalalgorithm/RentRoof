@@ -1,10 +1,12 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.AspNetCore.Mvc;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.AccountRepositories;
 using RentHome.Shared.CustomResponse;
 using RentHome.Shared.DTOs;
+using System.Security.Claims;
 
 namespace RentHome.Server.Controllers
 {
@@ -54,22 +56,39 @@ namespace RentHome.Server.Controllers
             return Ok(result);
         }
 
+        //[Authorize]
         [HttpGet("GetProfile")]
         public async Task<ActionResult<UserResponseDTO>> GetProfile()
         {
-            var id = JwtReader.GetUserId(User);
-            if(id==0)
+            var email = CurrentUser();
+
+            if(string.IsNullOrEmpty(email))
             {
                 return BadRequest("User not found");
             }
-            var result = await accountRepo.GetProfile(id);
+            var result = await accountRepo.GetProfile(email);
 
             if(result==null)
             {
-                return BadRequest("user does not exist");
+                return BadRequest("User does not exist");
             }
 
             return Ok(result);
+        }
+
+        private string CurrentUser()
+        {
+            var identity = HttpContext.User.Identity as ClaimsIdentity;
+
+            if(identity==null)
+            {
+                return "";
+            }
+
+            var userClaims = identity.Claims!;
+
+             var result = userClaims.FirstOrDefault(o => o.Type == ClaimTypes.Email)?.Value!;
+            return result; 
         }
     }
 }

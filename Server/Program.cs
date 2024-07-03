@@ -1,7 +1,9 @@
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using RentHome.Client.Services.AccountServices;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.AccountRepositories;
 using RentHome.Server.Repositories.HouseRepositories;
@@ -39,6 +41,15 @@ builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IModeRepo, ModeRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 
+
+
+builder.Services.AddCors(options =>
+{
+    options.AddPolicy("AllowOrigin", builder => builder.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+});
+
+
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -61,6 +72,9 @@ app.UseBlazorFrameworkFiles();
 app.UseStaticFiles();
 
 app.UseRouting();
+app.UseAuthentication();
+app.UseAuthorization();
+app.UseCors("AllowOrigin");
 
 
 app.MapRazorPages();

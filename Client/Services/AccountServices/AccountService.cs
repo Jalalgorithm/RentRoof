@@ -1,5 +1,9 @@
-﻿using RentHome.Shared.CustomResponse;
+﻿using Blazored.LocalStorage;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
+using RentHome.Shared.CustomResponse;
 using RentHome.Shared.DTOs;
+using System.Net.Http;
+using System.Net.Http.Headers;
 using System.Net.Http.Json;
 
 namespace RentHome.Client.Services.AccountServices
@@ -19,6 +23,7 @@ namespace RentHome.Client.Services.AccountServices
 
             return response!;
         }
+
 
         public async Task<Response> Login(UserLoginDTO userLogin)
         {

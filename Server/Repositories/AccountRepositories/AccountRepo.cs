@@ -22,7 +22,7 @@ namespace RentHome.Server.Repositories.AccountRepositories
             this.dbContext = dbContext;
             this.configuration = configuration;
         }
-        public async Task<UserResponseDTO> GetProfile(int id)
+        public async Task<UserResponseDTO> GetProfile(string email)
         {
             var user = await dbContext.Users
                 .Select(authUser => new UserResponseDTO
@@ -31,11 +31,12 @@ namespace RentHome.Server.Repositories.AccountRepositories
                     FirstName = authUser.FirstName,
                     LastName = authUser.LastName,
                     Email = authUser.Email,
-                    Phone = authUser.Phone
+                    Phone = authUser.Phone,
+                    Address = authUser.Address
                 })
-                .FirstOrDefaultAsync(u => u.Id == id);
+                .FirstOrDefaultAsync(u => u.Email.ToLower() == email.ToLower());
 
-            return user;
+            return user;    
         }
 
         public async Task<Response> Login(UserLoginDTO userLogin)
@@ -120,7 +121,9 @@ namespace RentHome.Server.Repositories.AccountRepositories
             List<Claim> claims = new()
             {
                 new Claim("id" , "" +user.Id),
-                new Claim("role" , user.Role)
+                new Claim(ClaimTypes.Role , user.Role),
+                new Claim(ClaimTypes.Email , user.Email),
+                new Claim(ClaimTypes.Name , user.FirstName)
             };
 
             string strKey = configuration["JwtSettings:Key"]!;

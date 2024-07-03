@@ -1,12 +1,13 @@
 ﻿using Blazored.LocalStorage;
 using Microsoft.AspNetCore.Components.Authorization;
+using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using System.Net.Http.Headers;
 using System.Security.Claims;
 using System.Text.Json;
 
 namespace RentHome.Client
 {
-    public class CustomAuthStateProvider : AuthenticationStateProvider
+    public class CustomAuthStateProvider : AuthenticationStateProvider 
     {
         private readonly ILocalStorageService localStorage;
         private readonly HttpClient httpClient;
@@ -38,6 +39,7 @@ namespace RentHome.Client
 
             return state;
         }
+
 
         public  static IEnumerable<Claim> ParseClaimsFromJwt(string jwt)
         {
