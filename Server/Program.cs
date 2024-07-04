@@ -3,11 +3,13 @@ using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
 using RentHome.Client.Services.AccountServices;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.AccountRepositories;
 using RentHome.Server.Repositories.HouseRepositories;
 using RentHome.Server.Repositories.ModeRepositories;
+using Swashbuckle.AspNetCore.Filters;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -16,6 +18,7 @@ var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllersWithViews();
 builder.Services.AddRazorPages();
+
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
@@ -36,7 +39,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!))
     };
 });
-builder.Services.AddAuthorization(); 
+builder.Services.AddAuthorization();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IModeRepo, ModeRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();

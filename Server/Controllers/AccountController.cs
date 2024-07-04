@@ -56,7 +56,7 @@ namespace RentHome.Server.Controllers
             return Ok(result);
         }
 
-        //[Authorize]
+        [Authorize]
         [HttpGet("GetProfile")]
         public async Task<ActionResult<UserResponseDTO>> GetProfile()
         {

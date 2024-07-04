@@ -29,7 +29,7 @@ namespace RentHome.Client
             if(!string.IsNullOrEmpty(token) )
             {
                 identity = new ClaimsIdentity (ParseClaimsFromJwt(token) , "jwt");
-                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer" , token.Replace("\\",""));
+                httpClient.DefaultRequestHeaders.Authorization = new AuthenticationHeaderValue("Bearer" , token.Replace("\"",""));
             }
 
             var user = new ClaimsPrincipal(identity);
