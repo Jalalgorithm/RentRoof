@@ -31,16 +31,16 @@
       "destination": "wwwroot/Libraries/jquery/"
     },
     {
-      "library": "bootstrap@5.3.3",
-      "destination": "wwwroot/Libraries/bootstrap/"
-    },
-    {
       "library": "font-awesome@6.5.2",
       "destination": "wwwroot/Libraries/font-awesome/"
     },
     {
       "library": "mdbootstrap@4.20.0",
       "destination": "wwwroot/Libraries/mdbootstrap/"
+    },
+    {
+      "library": "bootstrap@5.3.3",
+      "destination": "wwwroot/Libraries/bootstrap/"
     }
   ]
 }

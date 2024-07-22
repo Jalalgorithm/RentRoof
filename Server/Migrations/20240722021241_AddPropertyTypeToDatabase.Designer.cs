@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using RentHome.Server.Data;
 
@@ -11,9 +12,11 @@ using RentHome.Server.Data;
 namespace RentHome.Server.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    partial class ApplicationDbContextModelSnapshot : ModelSnapshot
+    [Migration("20240722021241_AddPropertyTypeToDatabase")]
+    partial class AddPropertyTypeToDatabase
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,88 +25,6 @@ namespace RentHome.Server.Migrations
 
             SqlServerModelBuilderExtensions.UseIdentityColumns(modelBuilder);
 
-            modelBuilder.Entity("RentHome.Shared.Models.Agent", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgentStatusId")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Email")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("FirstName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("LastName")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<string>("Phone")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AgentStatusId");
-
-                    b.ToTable("Agent");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.AgentStatus", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("Status")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("AgentStatuses");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.Appointment", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgentId")
-                        .HasColumnType("int");
-
-                    b.Property<DateTime>("AppointmentDate")
-                        .HasColumnType("datetime2");
-
-                    b.Property<int>("HouseId")
-                        .HasColumnType("int");
-
-                    b.Property<int>("UserId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("AgentId");
-
-                    b.HasIndex("HouseId");
-
-                    b.HasIndex("UserId");
-
-                    b.ToTable("Appointments");
-                });
-
             modelBuilder.Entity("RentHome.Shared.Models.House", b =>
                 {
                     b.Property<int>("Id")
@@ -111,9 +32,6 @@ namespace RentHome.Server.Migrations
                         .HasColumnType("int");
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<int>("AgentId")
-                        .HasColumnType("int");
 
                     b.Property<DateTime>("DateCreated")
                         .HasColumnType("datetime2");
@@ -150,35 +68,11 @@ namespace RentHome.Server.Migrations
 
                     b.HasKey("Id");
 
-                    b.HasIndex("AgentId");
-
                     b.HasIndex("ModeId");
 
                     b.HasIndex("TypeOfPropertyId");
 
                     b.ToTable("Houses");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.HouseImage", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
-
-                    b.Property<string>("FilePath")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.Property<int?>("HouseId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.HasIndex("HouseId");
-
-                    b.ToTable("HouseImages");
                 });
 
             modelBuilder.Entity("RentHome.Shared.Models.Mode", b =>
@@ -265,52 +159,8 @@ namespace RentHome.Server.Migrations
                     b.ToTable("Users");
                 });
 
-            modelBuilder.Entity("RentHome.Shared.Models.Agent", b =>
-                {
-                    b.HasOne("RentHome.Shared.Models.AgentStatus", "AgentStatus")
-                        .WithMany()
-                        .HasForeignKey("AgentStatusId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.Navigation("AgentStatus");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.Appointment", b =>
-                {
-                    b.HasOne("RentHome.Shared.Models.Agent", "Agent")
-                        .WithMany("Appointments")
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("RentHome.Shared.Models.House", "House")
-                        .WithMany("Appointments")
-                        .HasForeignKey("HouseId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.HasOne("RentHome.Shared.Models.User", "User")
-                        .WithMany("Appointments")
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Restrict)
-                        .IsRequired();
-
-                    b.Navigation("Agent");
-
-                    b.Navigation("House");
-
-                    b.Navigation("User");
-                });
-
             modelBuilder.Entity("RentHome.Shared.Models.House", b =>
                 {
-                    b.HasOne("RentHome.Shared.Models.Agent", "Agent")
-                        .WithMany("Houses")
-                        .HasForeignKey("AgentId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
                     b.HasOne("RentHome.Shared.Models.Mode", "Mode")
                         .WithMany("Houses")
                         .HasForeignKey("ModeId")
@@ -323,32 +173,9 @@ namespace RentHome.Server.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.Navigation("Agent");
-
                     b.Navigation("Mode");
 
                     b.Navigation("TypeOfProperty");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.HouseImage", b =>
-                {
-                    b.HasOne("RentHome.Shared.Models.House", null)
-                        .WithMany("OtherImages")
-                        .HasForeignKey("HouseId");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.Agent", b =>
-                {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("Houses");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.House", b =>
-                {
-                    b.Navigation("Appointments");
-
-                    b.Navigation("OtherImages");
                 });
 
             modelBuilder.Entity("RentHome.Shared.Models.Mode", b =>
@@ -359,11 +186,6 @@ namespace RentHome.Server.Migrations
             modelBuilder.Entity("RentHome.Shared.Models.TypeOfProperty", b =>
                 {
                     b.Navigation("Houses");
-                });
-
-            modelBuilder.Entity("RentHome.Shared.Models.User", b =>
-                {
-                    b.Navigation("Appointments");
                 });
 #pragma warning restore 612, 618
         }

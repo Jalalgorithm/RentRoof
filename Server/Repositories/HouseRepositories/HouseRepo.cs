@@ -43,7 +43,6 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 NumberOfBathroom = houseRequestDTO.NumberOfBathroom,
                 Price = houseRequestDTO.Price,
                 ModeId = houseRequestDTO.ModeId,
-                Type = houseRequestDTO.Type,
                 Size = houseRequestDTO.Size,
                 Location = houseRequestDTO.Location,
                 Image = houseRequestDTO.Image
@@ -101,7 +100,6 @@ namespace RentHome.Server.Repositories.HouseRepositories
                     Mode = houseResponse.Mode.Name,
                     Image = houseResponse.Image,
                     DateCreated = houseResponse.DateCreated,
-                    Type = houseResponse.Type,
                     ModeId = houseResponse.ModeId
                 })
                 .ToListAsync();
@@ -126,7 +124,6 @@ namespace RentHome.Server.Repositories.HouseRepositories
                     NumberOfBedroom = mainHouse.NumberOfBedroom,
                     Location = mainHouse.Location,
                     Mode = mainHouse.Mode.Name,
-                    Type = mainHouse.Type,
                     Image = mainHouse.Image
                 })
                 .FirstOrDefaultAsync(h => h.Id == id);
@@ -166,7 +163,6 @@ namespace RentHome.Server.Repositories.HouseRepositories
             mainHouse.NumberOfBathroom = houseRequestDTO.NumberOfBathroom;
             mainHouse.NumberOfBedroom = houseRequestDTO.NumberOfBedroom;
             mainHouse.Price = houseRequestDTO.Price;
-            mainHouse.Type = houseRequestDTO.Type;
             mainHouse.Image = houseRequestDTO.Image;
 
             await _context.SaveChangesAsync();

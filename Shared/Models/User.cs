@@ -30,5 +30,6 @@ namespace RentHome.Shared.Models
 
         public string Role { get; set; } = "";
         public DateTime CreatedAt { get; set; }= DateTime.Now;
+        public List<Appointment> Appointments { get; set; }
     }
 }

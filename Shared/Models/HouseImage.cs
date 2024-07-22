@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace RentHome.Shared.Models
 {
-    public class Type
+    public class HouseImage
     {
         public int Id { get; set; }
-        public string? Name { get; set; }
+        public string FilePath { get; set; }
     }
 }
