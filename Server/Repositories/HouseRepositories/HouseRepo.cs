@@ -10,10 +10,12 @@ namespace RentHome.Server.Repositories.HouseRepositories
     public class HouseRepo : IHouseRepo
     {
         private readonly ApplicationDbContext _context;
+        private readonly ImageHandler imageHandler;
 
-        public HouseRepo(ApplicationDbContext context)
+        public HouseRepo(ApplicationDbContext context , ImageHandler imageHandler)
         {
             _context = context;
+            this.imageHandler = imageHandler;
         }
 
         public async Task<Response> AddHouseData(HouseRequestDTO houseRequestDTO)
@@ -36,17 +38,52 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 };
             }
 
+            if(houseRequestDTO==null ||houseRequestDTO.OtherImages.Count<1)
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "No picture found"
+                };
+            }
+            var imageUrl = imageHandler.UploadImage(houseRequestDTO.Image);
+
+            var listofImage = imageHandler.UploadManyImages(houseRequestDTO.OtherImages);
+            
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "issue uploading image"
+                };
+            }
+
+            var propImage = new List<HouseImage>();
+
+            
+
+            foreach (var url in listofImage)
+            {
+                var imUrl = new HouseImage();
+                imUrl.FilePath = url ;
+                propImage.Add(imUrl);
+            }
+
             var house = new House()
             {
                 Name = houseRequestDTO.Name,
+                Description = houseRequestDTO.Description,
                 NumberOfBedroom = houseRequestDTO.NumberOfBedroom,
                 NumberOfBathroom = houseRequestDTO.NumberOfBathroom,
                 Price = houseRequestDTO.Price,
                 ModeId = houseRequestDTO.ModeId,
+                AgentId = houseRequestDTO.AgentId,
+                TypeOfPropertyId = houseRequestDTO.TypeofPropertyId,
                 Size = houseRequestDTO.Size,
                 Location = houseRequestDTO.Location,
-                Image = houseRequestDTO.Image
-
+                Image = imageUrl,
+                OtherImages = propImage.ToList()
             };
 
             await _context.Houses.AddAsync(house);
@@ -61,7 +98,9 @@ namespace RentHome.Server.Repositories.HouseRepositories
 
         public async Task<Response> DeleteHouseData(int id)
         {
-            var deleteHouse = await _context.Houses.FindAsync(id);
+            var deleteHouse = await _context.Houses
+                .Include(h => h.OtherImages)
+                .FirstOrDefaultAsync(p => p.Id == id);
 
             if(deleteHouse == null)
             {
@@ -72,6 +111,10 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 };
             }
 
+            imageHandler.DeleteAnImage(deleteHouse.Image);
+            imageHandler.DeleteManyImages(deleteHouse.OtherImages.Select(i=>i.FilePath).ToList());
+
+            _context.HouseImages.RemoveRange(deleteHouse.OtherImages);
             _context.Houses.Remove(deleteHouse);
             await _context.SaveChangesAsync();
 
@@ -88,6 +131,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
         {
             var result = await _context.Houses
                 .Include(m=>m.Mode)
+                .Include(p=>p.TypeOfProperty)
                 .Select(houseResponse=> new HouseResponseDTO
                 {
                     Id= houseResponse.Id,
@@ -98,6 +142,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
                     NumberOfBedroom = houseResponse.NumberOfBedroom,
                     Location = houseResponse.Location,
                     Mode = houseResponse.Mode.Name,
+                    TypeofProperty = houseResponse.TypeOfProperty.Name,
                     Image = houseResponse.Image,
                     DateCreated = houseResponse.DateCreated,
                     ModeId = houseResponse.ModeId
@@ -110,21 +155,25 @@ namespace RentHome.Server.Repositories.HouseRepositories
 
         }
 
-        public async Task<HouseResponseDTO> GetHouseDataById(int id)
+        public async Task<HouseResponseDetail> GetHouseDataById(int id)
         {
             var house = await _context.Houses
                 .Include(m=>m.Mode)
-                .Select(mainHouse=> new HouseResponseDTO
+                .Include(p=>p.TypeOfProperty)
+                .Select(mainHouse=> new HouseResponseDetail
                 {
                     Id=mainHouse.Id,
                     Name = mainHouse.Name,
+                    Description = mainHouse.Description,
                     Size = mainHouse.Size,
                     Price = mainHouse.Price,
                     NumberOfBathroom = mainHouse.NumberOfBathroom,
                     NumberOfBedroom = mainHouse.NumberOfBedroom,
                     Location = mainHouse.Location,
                     Mode = mainHouse.Mode.Name,
-                    Image = mainHouse.Image
+                    TypeofProperty = mainHouse.TypeOfProperty.Name,
+                    Image = mainHouse.Image,
+                    OtherImages = mainHouse.OtherImages.Select(i=>i.FilePath).ToList()
                 })
                 .FirstOrDefaultAsync(h => h.Id == id);
 
@@ -157,13 +206,51 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 };
             }
 
+
+
+            if (houseRequestDTO == null || houseRequestDTO.OtherImages.Count < 1)
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "No picture found"
+                };
+            }
+            var imageUrl = imageHandler.UploadImage(houseRequestDTO.Image);
+
+            var listofImage = imageHandler.UploadManyImages(houseRequestDTO.OtherImages);
+
+            if (string.IsNullOrEmpty(imageUrl))
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "issue uploading image"
+                };
+            }
+
+            var propImage = new List<HouseImage>();
+
+
+
+            foreach (var url in listofImage)
+            {
+                var imUrl = new HouseImage();
+                imUrl.FilePath = url;
+                propImage.Add(imUrl);
+            }
+
             mainHouse.Name = houseRequestDTO.Name;
+            mainHouse.Description = houseRequestDTO.Description;
             mainHouse.Location = houseRequestDTO.Location;
             mainHouse.ModeId = houseRequestDTO.ModeId;
+            mainHouse.AgentId = houseRequestDTO.AgentId;
+            mainHouse.TypeOfPropertyId = houseRequestDTO.TypeofPropertyId;
             mainHouse.NumberOfBathroom = houseRequestDTO.NumberOfBathroom;
             mainHouse.NumberOfBedroom = houseRequestDTO.NumberOfBedroom;
             mainHouse.Price = houseRequestDTO.Price;
-            mainHouse.Image = houseRequestDTO.Image;
+            mainHouse.Image = imageUrl;
+            mainHouse.OtherImages = propImage.ToList();
 
             await _context.SaveChangesAsync();
 
@@ -172,6 +259,22 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 Message = "Peoperty updated successfully",
                 Success = true
             };
+        }
+
+
+        public async Task<List<GetPropertyTypeDTO>> GetPropertyType()
+        {
+            var properties = await _context.PropertyTypes
+                .Select(property=> new GetPropertyTypeDTO
+                {
+                    Id= property.Id,
+                    PropertyName = property.Name
+                })
+                .ToListAsync();
+
+
+            return properties!;
+
         }
 
         private async Task<bool> CheckName(string name)

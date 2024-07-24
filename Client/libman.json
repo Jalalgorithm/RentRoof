@@ -41,6 +41,10 @@
     {
       "library": "bootstrap@5.3.3",
       "destination": "wwwroot/Libraries/bootstrap/"
+    },
+    {
+      "library": "filepond@4.31.1",
+      "destination": "wwwroot/Libraries/filepond/"
     }
   ]
 }

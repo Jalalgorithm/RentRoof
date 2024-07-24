@@ -1,9 +1,12 @@
 ﻿@page "/property-add"
-@using RentHome.Client.Services.ModeServices
+
 
 @inject IModeService modeService
 @inject IHouseService houseService
 @inject NavigationManager navigationManager
+@inject IAgentService agentService
+@inject SweetAlertService swal
+
 
 
 <div class="container-lg mt-2">
@@ -26,6 +29,14 @@
                 <InputText id="title" @bind-Value="houseRequestDTO.Name" class="form-control" placeholder="Name of property" />
             </div>
 
+            <label for="Description" class="form-label">Description</label>
+            <div class="input-group  mb-3">
+                <span class="input-group-text">
+                    <i class="bi bi-card-text"></i>
+                </span>
+                <InputTextArea id="Location" @bind-Value="houseRequestDTO.Description" class="form-control" placeholder="Description of property" />
+            </div>
+
             <label for="Location" class="form-label">Location</label>
             <div class="input-group  mb-3">
                 <span class="input-group-text">
@@ -35,22 +46,23 @@
             </div>
 
 
-            <label for="Type" class="form-label">Type</label>
+            <label for="Propert Type" class="form-label">Property Type</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
-                    <i class="bi bi-blockquote-right"></i>
+                    <i class="bi bi-receipt"></i>
                 </span>
-                <InputText id="Type" @bind-Value="houseRequestDTO.Type" class="form-control" placeholder="Type of property" />
+                <InputSelect id="propertyType" @bind-Value="houseRequestDTO.TypeofPropertyId" class="form-select">
+                    <option selected>Open this select menu</option>
+                    @foreach (var type in getPropertyTypes)
+                    {
+                        <option value="@type.Id">@type.PropertyName</option>
+                    }
+
+                </InputSelect>
             </div>
 
 
-            <label for="image" class="form-label">Image</label>
-            <div class="input-group mb-3">
-                <span class="input-group-text">
-                    <i class="bi bi-card-image"></i>
-                </span>
-                <InputText id="Image" @bind-Value="houseRequestDTO.Image" class="form-control" placeholder="Image Url of property" />
-            </div>
+           
 
             <label for="Size" class="form-label">Size</label>
             <div class="input-group mb-3">
@@ -69,12 +81,29 @@
                 <InputNumber id="NumberOfBedroom" @bind-Value="houseRequestDTO.NumberOfBedroom" class="form-control" placeholder="Enter a number" />
             </div>
 
+
+
             <label for="Price" class="form-label">Price</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-tags-fill"></i>
                 </span>
                 <InputNumber id="Price" @bind-Value="houseRequestDTO.Price" class="form-control" placeholder="Price of Proerty" />
+            </div>
+
+            <label for="Propert Agent" class="form-label">Agents</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <i class="bi bi-receipt"></i>
+                </span>
+                <InputSelect id="mode" @bind-Value="houseRequestDTO.AgentId" class="form-select">
+                    <option selected>Open this select menu</option>
+                    @foreach (var Agent in getAgents)
+                    {
+                        <option value="@Agent.Id">@Agent.FirstName @Agent.LastName</option>
+                    }
+
+                </InputSelect>
             </div>
 
             <label for="Propert Mode" class="form-label">Mode</label>
@@ -91,7 +120,37 @@
 
                 </InputSelect>
             </div>
-            <button type="submit" class="btn btn-primary"> Add Property </button>
+
+             <label for="image" class="form-label">Display Image</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <i class="bi bi-card-image"></i>
+                </span>
+                <InputFile id="image" OnChange="LoadImage" class="form-control" placeholder="Image of Property"  />
+            </div>
+
+            <label for="Otherimages" class="form-label">Other Images</label>
+            <div class="input-group mb-3">
+                <span class="input-group-text">
+                    <i class="bi bi-card-image"></i>
+                </span>
+                <InputFile id="Otherimages" OnChange="LoadOtherImages" class="form-control" placeholder="Other Images of Property" multiple   />
+            </div>
+            <button type="submit" class="btn btn-primary" disabled="@isLoading"> 
+                @if(isLoading)
+                {
+                    <div class="spinner-border" role="status">
+                        <span class="visually-hidden">Loading...</span>
+                    </div>
+                }
+                else
+                {
+                    <span>
+                        Add Property
+                    </span>
+                }
+
+                </button>
 
         </EditForm>
 
@@ -106,6 +165,13 @@
 @code {
     HouseRequestDTO houseRequestDTO = new HouseRequestDTO();
     List<ModeResponseDTO> modeResponses = new();
+    List<GetPropertyTypeDTO> getPropertyTypes = new();
+    List<GetAgentDTO> getAgents = new();
+    private IBrowserFile imageFile;
+    List<IBrowserFile> OtherImagesFiles = new();
+    private bool isLoading = false;
+    private Response result;
+
 
     protected async override Task OnInitializedAsync()
     {
@@ -114,16 +180,52 @@
 
     public async Task AddNewProperty()
     {
-        await houseService.AddHouseData(houseRequestDTO);
+        isLoading = true;
+
+        try
+        {
+            result = await houseService.AddHouseData(houseRequestDTO, imageFile, OtherImagesFiles);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+
+
+        if(result.Success)
+        {
+            await swal.FireAsync("Add Property","Property Successfully Added" , SweetAlertIcon.Success );
+            navigationManager.NavigateTo("/");
+        }
+
+        else
+        {
+            await swal.FireAsync("Add Property", "Couldnt add your property", SweetAlertIcon.Error);
+        }
+
+        
     }
     private async Task GetData()
     {
         modeResponses= await modeService.GetAllMode();
+        getPropertyTypes = await houseService.GetPropertyTypeList();
+        getAgents = await agentService.GetAgents();
     }
 
-    public void Failed()
+    public async Task Failed()
     {
-        Console.WriteLine("Failed!");
+        await swal.FireAsync("Invalid Submit", "Check your form again", SweetAlertIcon.Error);
     }
+
+    private async Task LoadImage(InputFileChangeEventArgs e)
+    {
+        imageFile = e.File;
+    }
+
+    private async Task LoadOtherImages (InputFileChangeEventArgs e)
+    {
+        OtherImagesFiles = e.GetMultipleFiles().ToList();
+    }
+
 
 }

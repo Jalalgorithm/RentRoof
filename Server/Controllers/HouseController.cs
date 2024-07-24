@@ -73,7 +73,7 @@ namespace RentHome.Server.Controllers
         }
 
         [HttpPost]
-        public async Task<ActionResult<Response>> AddHouse (HouseRequestDTO requestDTO)
+        public async Task<ActionResult<Response>> AddHouse ([FromForm]HouseRequestDTO requestDTO)
         {
             if(requestDTO == null)
             {
@@ -88,6 +88,25 @@ namespace RentHome.Server.Controllers
             }
 
             return Ok(result);
+        }
+
+        [HttpGet("GetPropList")]
+        public async Task<ActionResult<Response>> GetPropertyTypeList()
+        {
+            var property = await houseRepo.GetPropertyType();
+
+            if(property==null|| property.Count<1 )
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "No property Type Found"
+                };
+
+
+            }
+
+            return Ok(property);
         }
 
 

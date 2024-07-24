@@ -7,6 +7,7 @@ using Microsoft.OpenApi.Models;
 using RentHome.Client.Services.AccountServices;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.AccountRepositories;
+using RentHome.Server.Repositories.AgentRepositories;
 using RentHome.Server.Repositories.HouseRepositories;
 using RentHome.Server.Repositories.ModeRepositories;
 using Swashbuckle.AspNetCore.Filters;
@@ -40,9 +41,11 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
     };
 });
 builder.Services.AddAuthorization();
+builder.Services.AddScoped<ImageHandler>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IModeRepo, ModeRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
+builder.Services.AddScoped<IAgentRepo, AgentRepo>();
 
 
 

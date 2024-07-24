@@ -10,8 +10,8 @@ namespace RentHome.Server.Repositories.HouseRepositories
         Task<Response> UpdateHouseData(HouseRequestDTO houseRequestDTO , int id);
         Task<Response> DeleteHouseData(int id);
         Task<List<HouseResponseDTO>> GetHouseData();
-        Task<HouseResponseDTO> GetHouseDataById(int id);
-
+        Task<HouseResponseDetail> GetHouseDataById(int id);
+        Task<List<GetPropertyTypeDTO>> GetPropertyType();
 
     }
 }

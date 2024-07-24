@@ -18,6 +18,7 @@ namespace RentHome.Server.Data
         public DbSet<HouseImage> HouseImages { get; set; }
         public DbSet<AgentStatus> AgentStatuses { get; set; }
         public DbSet<Appointment> Appointments { get; set; }
+        public DbSet<Agent> Agents { get; set; }
 
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)

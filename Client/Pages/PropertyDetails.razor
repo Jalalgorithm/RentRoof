@@ -2,7 +2,6 @@
 
 @inject IHouseService houseService
 
-<h3>PropertyDetails</h3>
 
 <section class="py-5">
   <div class="container">
@@ -60,22 +59,21 @@
           </div>
 
           <p>
-            Modern look and quality demo item is a streetwear-inspired collection that continues to break away from the conventions of mainstream fashion. Made in Italy, these black and brown clothing low-top shirts for
-            men.
+            @houseResponse.Description
           </p>
 
           <div class="row">
             <dt class="col-3">Type:</dt>
-            <dd class="col-9">Regular</dd>
+            <dd class="col-9">@houseResponse.TypeofProperty</dd>
 
-            <dt class="col-3">Color</dt>
-            <dd class="col-9">Brown</dd>
+            <dt class="col-3">NumberofBedroom:</dt>
+            <dd class="col-9">@houseResponse.NumberOfBedroom</dd>
 
-            <dt class="col-3">Material</dt>
-            <dd class="col-9">Cotton, Jeans</dd>
+            <dt class="col-3">NumberofBathroom:</dt>
+            <dd class="col-9">@houseResponse.NumberOfBathroom</dd>
 
-            <dt class="col-3">Brand</dt>
-            <dd class="col-9">Reebook</dd>
+            <dt class="col-3">Area/Location:</dt>
+            <dd class="col-9">@houseResponse.Location</dd>
           </div>
 
           <hr />
@@ -115,7 +113,7 @@
 
 @code {
 
-    HouseResponseDTO houseResponse = new HouseResponseDTO();
+    HouseResponseDetail houseResponse = new HouseResponseDetail();
 
     [Parameter]
     public int Id { get; set; }

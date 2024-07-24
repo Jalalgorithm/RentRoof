@@ -29,5 +29,9 @@
     <ProjectReference Include="..\Shared\RentHome.Shared.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="Repositories\PropertyTypeRepositories\" />
+  </ItemGroup>
+
 
 </Project>

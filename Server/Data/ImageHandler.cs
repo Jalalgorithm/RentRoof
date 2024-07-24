@@ -39,6 +39,7 @@ namespace RentHome.Server.Data
                 {
                     File = new FileDescription(file.Name, stream),
                     UseFilename = true,
+                    Transformation = new Transformation().Width(600).Height(400).Crop("fill")
                 };
                 uploadResult = _cloudinary.Upload(uploadParams);
             }
@@ -69,6 +70,7 @@ namespace RentHome.Server.Data
                     {
                         File = new FileDescription(image.Name, stream),
                         UseFilename = true,
+                        Transformation = new Transformation().Width(600).Height(400).Crop("fill")
                     };
 
                     uploadResult = _cloudinary.Upload(uploadParams);

@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace RentHome.Shared.DTOs
 {
-    public class HouseResponseDTO
+    public class HouseResponseDetail
     {
         public int Id { get; set; }
         public string? Name { get; set; }
+        public string Description { get; set; }
         public string? Mode { get; set; }
         public int ModeId { get; set; }
         public string TypeofProperty { get; set; }
@@ -20,6 +21,7 @@ namespace RentHome.Shared.DTOs
         public int NumberOfBedroom { get; set; }
         public int NumberOfBathroom { get; set; }
         public string? Image { get; set; }
+        public List<string> OtherImages { get; set; }
         public DateTime DateCreated { get; set; } = DateTime.Now;
     }
 }
