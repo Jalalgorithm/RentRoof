@@ -3,6 +3,7 @@
 @inject ILocalStorageService localStorage
 @inject AuthenticationStateProvider authStateProvider
 @inject NavigationManager navigationManager
+@inject SweetAlertService swal
 
 
 
@@ -38,7 +39,20 @@
                                     </div>
 
                                     <div class="pt-1 mb-4">
-                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="submit">Login</button>
+                                        <button data-mdb-button-init data-mdb-ripple-init class="btn btn-dark btn-lg btn-block" type="submit" disabled="@isLoading">
+                                            @if (isLoading)
+                                            {
+                                                <div class="spinner-border" role="status">
+                                                    <span class="visually-hidden">Loading...</span>
+                                                </div>
+                                            }
+                                            else
+                                            {
+                                                <span>
+                                                    Login
+                                                </span>
+                                            }
+                                        </button>
                                     </div>
 
                                     <a class="small text-muted" href="">Forgot password?</a>
@@ -63,6 +77,8 @@
 
 @code {
     UserLoginDTO userLogin = new();
+    private bool isLoading = false;
+    public Response result;
 
     protected override Task OnInitializedAsync()
     {
@@ -71,14 +87,34 @@
 
     public async Task HandleLogin()
     {
-        var result = await accountService.Login(userLogin);
-        var token = result.Message;
 
-        await localStorage.SetItemAsync("token", token);
-        await authStateProvider.GetAuthenticationStateAsync();
+        isLoading = true;
 
-        navigationManager.NavigateTo("/");
+        try
+        {
+            result = await accountService.Login(userLogin);
 
+        }
+        finally
+        {
+            isLoading = false;
+        }
+        if (result.Success)
+        {
+            await swal.FireAsync("Welcome", "You are logged in", SweetAlertIcon.Success);
+            var token = result.Message;
+            await localStorage.SetItemAsync("token", token);
+            await authStateProvider.GetAuthenticationStateAsync();
+
+            navigationManager.NavigateTo("/");
+
+        }
+        else
+        {
+            await swal.FireAsync("Error", result.Message, SweetAlertIcon.Error);
+        }
+        
+        
 
     }
 

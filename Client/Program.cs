@@ -12,6 +12,7 @@ using RentHome.Client.Services.HouseServices;
 using RentHome.Client.Services.ModeServices;
 
 
+
 var builder = WebAssemblyHostBuilder.CreateDefault(args);
 builder.RootComponents.Add<App>("#app");
 builder.RootComponents.Add<HeadOutlet>("head::after");
