@@ -16,6 +16,15 @@ namespace RentHome.Client.Services.AccountServices
         {
             this.httpClient = httpClient;
         }
+
+        public async Task<AgentProfileDTO> GetAgentProfile()
+        {
+            var result = await httpClient.GetAsync("api/account/GetProfile/Agent");
+            var response = await result.Content.ReadFromJsonAsync<AgentProfileDTO>();
+
+            return response!;
+        }
+
         public async Task<UserResponseDTO> GetProfile()
         {
             var result = await httpClient.GetAsync("api/account/GetProfile");
@@ -33,11 +42,29 @@ namespace RentHome.Client.Services.AccountServices
             return response!;
         }
 
+        public async Task<Response> LoginAgent(AgentLoginDTO agentLogin)
+        {
+            var result = await httpClient.PostAsJsonAsync("api/account/Login/Agent" , agentLogin);
+            var response = await result.Content.ReadFromJsonAsync<Response>();
+
+            return response!;
+        }
+
+
+
         public async Task<Response> Register(UserRegisterDTO userRegister)
         {
             var result = await httpClient.PostAsJsonAsync("api/account/Register", userRegister);
             var response = await result.Content.ReadFromJsonAsync<Response>(); 
             
+            return response!;
+        }
+
+        public async Task<Response> RegisterAgent(RegisterAgentDTO agentRegister)
+        {
+            var result = await httpClient.PostAsJsonAsync("api/account/Register/Agent" , agentRegister);
+            var response = await result.Content.ReadFromJsonAsync<Response>();
+
             return response!;
         }
     }

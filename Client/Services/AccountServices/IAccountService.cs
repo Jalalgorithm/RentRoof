@@ -8,5 +8,8 @@ namespace RentHome.Client.Services.AccountServices
         Task<Response> Login(UserLoginDTO userLogin);
         Task<Response> Register(UserRegisterDTO userRegister);
         Task<UserResponseDTO> GetProfile();
+        Task<AgentProfileDTO> GetAgentProfile();
+        Task<Response> LoginAgent(AgentLoginDTO agentLogin);
+        Task<Response> RegisterAgent(RegisterAgentDTO agentRegister);
     }
 }

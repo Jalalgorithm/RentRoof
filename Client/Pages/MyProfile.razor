@@ -1,5 +1,7 @@
 ﻿@page "/myprofile"
+@using System.Security.Claims
 @inject IAccountService accountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
 
 @attribute [Authorize]
 
@@ -11,7 +13,7 @@
                     <div class="col-sm-4 bg-info rounded-left">
                         <div class="card-block text-center text-white">
                             <i class="fas fa-user-tie fa-7x mt-5"></i>
-                            <h2 class="fw-bold mt-4">@userProfile.FirstName</h2>
+                            <h2 class="fw-bold mt-4">@FirstName</h2>
                             <p>@userProfile.Address</p>
                             <i class="far fa-edit fa-2x mb-4"></i>
                         </div>
@@ -22,11 +24,11 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <p class="fw-bold">Email:</p>
-                                <h6 class="text-muted">@userProfile.Email</h6>
+                                <h6 class="text-muted">@DisplayEmail</h6>
                             </div>
                             <div class="col-sm-6">
                                 <p class="fw-bold">Phone</p>
-                                <h6 class="text-muted">@userProfile.Phone</h6>
+                                <h6 class="text-muted">@DisplayPhone</h6>
                             </div>
                         </div>
                         <h4 class="mt-3">Projects</h4>
@@ -34,11 +36,11 @@
                         <div class="row">
                             <div class="col-sm-6">
                                 <p class="fw-bold">Other Names</p>
-                                <h6 class="text-muted">@userProfile.LastName</h6>
+                                <h6 class="text-muted">@DisplayLastName</h6>
                             </div>
                             <div class="col-sm-6">
-                                <p class="fw-bold">Account Created</p>
-                                <h6 class="text-muted"> Today</h6>
+                                <p class="fw-bold">Address</p>
+                                <h6 class="text-muted">@DisplayAddress</h6>
                             </div>
                         </div>
                         <hr class="bg-primary" />
@@ -58,16 +60,42 @@
 
 @code {
     UserResponseDTO userProfile = new();
+    AgentProfileDTO agentProfile = new();
+    private ClaimsPrincipal user;
+    private string role;
 
     protected async override Task OnInitializedAsync()
     {
+
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        role = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value!;
+
         await GetData();
     }
 
     public async Task GetData()
     {
-        userProfile = await accountService.GetProfile();
+
+        if(role=="Agent")
+        {
+            agentProfile = await accountService.GetAgentProfile();
+        }
+
+        if(role=="Client")
+        {
+            userProfile = await accountService.GetProfile();
+        }
+
+
 
     }
+
+    private string FirstName => role == "Agent" ? agentProfile.FirstName : userProfile.FirstName;
+    private string LastName => role == "Agent" ? agentProfile.LastName : userProfile.LastName;
+    private string DisplayAddress => role == "Agent" ? agentProfile.Address : userProfile.Address;
+    private string DisplayEmail => role == "Agent" ? agentProfile.Email : userProfile.Email;
+    private string DisplayPhone => role == "Agent" ? agentProfile.PhoneNumber : userProfile.Phone;
+    private string DisplayLastName => role == "Agent" ? agentProfile.LastName : userProfile.LastName;
 
 }

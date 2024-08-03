@@ -1,0 +1,140 @@
+﻿@page "/register-asagent"
+@inject IAccountService accountService
+@inject NavigationManager navigationManager
+@inject SweetAlertService swal
+
+<section class="bg-light p-3 p-md-4 p-xl-5">
+    <div class="container">
+        <div class="row justify-content-center">
+            <div class="col-12 col-xxl-10">
+                <div class="card border-light-subtle shadow-sm">
+                    <div class="row g-0">
+                        <div class="col-12 col-md-5 d-none d-md-block">
+                            <img class="img-fluid rounded-start w-100 h-100" loading="lazy" src="agentpic.png" alt="Agent Picture" style="object-fit: cover;">
+                        </div>
+                        <div class="col-12 col-md-7 d-flex align-items-center justify-content-center">
+                            <div class="col-12 col-lg-11 col-xl-10">
+                                <div class="card-body p-3 p-md-4 p-xl-4">
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="text-center mb-3">
+                                                <a href="#!">
+                                                    <img src="landlord.png" alt="LandLord Logo" style="width: 150px; height: auto;">
+                                                </a>
+                                            </div>
+                                            <h2 class="h5 text-center mb-3">Become an Agent</h2>
+                                        </div>
+                                    </div>
+                                    <EditForm Model="NewAgent" OnValidSubmit="HandleAgentRegistration">
+                                        <div class="row gy-2">
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputText  @bind-Value="NewAgent.FirstName" class="form-control" name="firstName"  placeholder="First Name" required/>
+                                                    <label for="firstName" class="form-label">First Name</label>
+                                                </div>
+                                            </div>
+
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputText @bind-Value="NewAgent.LastName" class="form-control" name="lastName" id="lastName" placeholder="Last Name" required/>
+                                                    <label for="lastName" class="form-label">Last Name</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputText @bind-Value="NewAgent.Phone" class="form-control" name="phone" id="phone" placeholder="Phone Number" required/>
+                                                    <label for="phone" class="form-label">Phone Number</label>
+                                                </div>
+                                            </div>
+                                            
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputTextArea class="form-control" @bind-Value="NewAgent.Address" name="address" id="address" placeholder="Address" required />
+                                                    <label for="address" class="form-label">Address</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputText  class="form-control" @bind-Value="NewAgent.Email"  name="email" id="email" placeholder="name@example.com" required/>
+                                                    <label for="email" class="form-label">Email</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="form-floating">
+                                                    <InputText class="form-control" @bind-Value="NewAgent.Password" name="password" id="password" placeholder="Password" required/>
+                                                    <label for="password" class="form-label">Password</label>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <div class="d-grid">
+                                                    <button class="btn btn-primary" type="submit">
+                                                        @if (isLoading)
+                                                        {
+                                                            <div class="spinner-border spinner-border-sm" role="status">
+                                                                <span class="visually-hidden">Loading...</span>
+                                                            </div>
+                                                        }
+                                                        else
+                                                        {
+                                                            <span>Sign Up</span>
+                                                        }
+                                                    </button>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </EditForm>
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <p class="mb-0 mt-4 text-secondary text-center">Already have an account? <a href="#!" class="link-primary text-decoration-none">Sign in</a></p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+
+
+
+@code {
+    RegisterAgentDTO NewAgent = new();
+    private bool isLoading = true;
+    private Response result;
+
+
+    private async Task HandleAgentRegistration()
+    {
+        isLoading = true;
+
+        try
+        {
+            result = await accountService.RegisterAgent(NewAgent);
+        }
+        finally
+        {
+            isLoading = false;
+        }
+        if (result.Success)
+        {
+            await swal.FireAsync("Welcome", "Your account has been created", SweetAlertIcon.Success);
+            var token = result.Message;
+            
+
+            navigationManager.NavigateTo("/agent-login");
+
+        }
+        else
+        {
+            await swal.FireAsync("Error", result.Message, SweetAlertIcon.Error);
+        }
+
+
+    }
+
+ 
+}

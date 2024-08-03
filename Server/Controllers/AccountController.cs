@@ -38,6 +38,24 @@ namespace RentHome.Server.Controllers
             return Ok(result);
         }
 
+        [HttpPost("Login/Agent")]
+        public async Task<ActionResult<Response>> LoginAgent(AgentLoginDTO agentLogin)
+        {
+            if (agentLogin == null)
+            {
+                return BadRequest("Input valid details");
+            }
+
+            var result = await accountRepo.LoginAgent(agentLogin);
+
+            if(!result.Success)
+            {
+                return BadRequest("Couldnt complete log in operation");
+            }
+
+            return Ok(result);
+        }
+
         [HttpPost("Register")]
         public async Task<ActionResult<Response>> Register(UserRegisterDTO userRegister)
         {
@@ -51,6 +69,24 @@ namespace RentHome.Server.Controllers
             if(!result.Success)
             {
                 return NotFound("Couldnt complete sig in request");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpPost("Register/Agent")]
+        public async Task<ActionResult<Response>> RegisterAgent (RegisterAgentDTO registerAgent)
+        {
+            if(registerAgent == null)
+            {
+                return BadRequest("input valid details");
+            }
+
+            var result = await accountRepo.RegisterAgent(registerAgent);
+
+            if(!result.Success)
+            {
+                return NotFound("Couldnt complete sign up request");
             }
 
             return Ok(result);
@@ -71,6 +107,25 @@ namespace RentHome.Server.Controllers
             if(result==null)
             {
                 return BadRequest("User does not exist");
+            }
+
+            return Ok(result);
+        }
+        [Authorize(Roles ="Agent")]
+        [HttpGet("GetProfile/Agent")]
+        public async Task<ActionResult<AgentProfileDTO>> GetAgentProfile()
+        {
+            var email = CurrentUser();
+
+            if(string.IsNullOrEmpty(email))
+            {
+                return BadRequest("User not found");
+            }
+            var result = await accountRepo.GetAgentProfile(email);
+
+            if (result==null)
+            {
+                return BadRequest("Agent not found");
             }
 
             return Ok(result);
