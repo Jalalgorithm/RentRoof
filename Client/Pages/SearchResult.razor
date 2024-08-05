@@ -1,0 +1,169 @@
+﻿@page "/searchresult"
+
+<body>
+    <div class="container">
+        <div class="row">
+            <!-- BEGIN SEARCH RESULT -->
+            <div class="col-md-12">
+                <div class="grid search">
+                    <div class="grid-body">
+                        <div class="row">
+                            <!-- BEGIN FILTERS -->
+                            <div class="col-md-3">
+                                <h2 class="grid-title"><i class="fa fa-filter"></i> Filters</h2>
+                                <hr>
+
+                                <!-- BEGIN FILTER BY CATEGORY -->
+                                <h4>By category:</h4>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="category1">
+                                    <label class="form-check-label" for="category1">
+                                        Application
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="category2">
+                                    <label class="form-check-label" for="category2">
+                                        Design
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="category3">
+                                    <label class="form-check-label" for="category3">
+                                        Desktop
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="category4">
+                                    <label class="form-check-label" for="category4">
+                                        Management
+                                    </label>
+                                </div>
+                                <div class="form-check">
+                                    <input class="form-check-input" type="checkbox" value="" id="category5">
+                                    <label class="form-check-label" for="category5">
+                                        Mobile
+                                    </label>
+                                </div>
+                                <!-- END FILTER BY CATEGORY -->
+
+                                <div class="padding"></div>
+
+                                <!-- BEGIN FILTER BY PRICE -->
+                                <h4>By Price:</h4>
+                                Min Price
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Min Price">
+                                    <span class="input-group-text bg-primary text-white"><i class="bi bi-tags"></i></span>
+                                </div>
+                                To
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Max Price">
+                                    <span class="input-group-text bg-primary text-white"><i class="bi bi-tags"></i></span>
+                                </div>
+                                <!-- END FILTER BY PRICE -->
+
+                                <div class="padding"></div>
+
+                                <!-- BEGIN FILTER BY LOCATION -->
+                                <h4>By Location:</h4>
+                                Where?
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" placeholder="Start Date">
+                                    <span class="input-group-text bg-primary text-white"><i class="bi bi-geo-alt-fill"></i></span>
+                                </div>
+                                
+                                <!-- END FILTER BY LOCATION -->
+                            </div>
+                            <!-- END FILTERS -->
+                            <!-- BEGIN RESULT -->
+                            <div class="col-md-9">
+                                <h2><i class="bi bi-file-earmark"></i> Result</h2>
+                                <hr>
+                                <!-- BEGIN SEARCH INPUT -->
+                                <div class="input-group mb-3">
+                                    <input type="text" class="form-control" value="web development" placeholder="Search">
+                                    <button class="btn btn-primary" type="button"><i class="fa fa-search"></i></button>
+                                </div>
+                                <!-- END SEARCH INPUT -->
+                                <p>Showing all results matching "web development"</p>
+
+                                <div class="padding"></div>
+
+                                <div class="row">
+                                    <!-- BEGIN ORDER RESULT -->
+                                    <div class="col-sm-6">
+                                        <div class="dropdown">
+                                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" id="orderDropdown" data-bs-toggle="dropdown" aria-expanded="false">
+                                                Order by
+                                            </button>
+                                            <ul class="dropdown-menu" aria-labelledby="orderDropdown">
+                                                <li><a class="dropdown-item" href="#">Name</a></li>
+                                                <li><a class="dropdown-item" href="#">Date</a></li>
+                                                <li><a class="dropdown-item" href="#">View</a></li>
+                                                <li><a class="dropdown-item" href="#">Rating</a></li>
+                                            </ul>
+                                        </div>
+                                    </div>
+                                    <!-- END ORDER RESULT -->
+
+                                    <div class="col-md-6 text-end">
+                                        <div class="btn-group" role="group">
+                                            <button type="button" class="btn btn-outline-secondary active"><i class="fa fa-list"></i></button>
+                                            <button type="button" class="btn btn-outline-secondary"><i class="fa fa-th"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- BEGIN TABLE RESULT -->
+                                <div class="table-responsive">
+                                    <table class="table table-hover">
+                                        <tbody>
+                                            <tr>
+                                                <td class="number text-center">1</td>
+                                                <td class="image"><img src="https://www.bootdey.com/image/400x300/FF8C00" alt=""></td>
+                                                <td class="product"><strong>Product 1</strong><br>This is the product description.</td>
+                                                <td class="rate text-end"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i></span></td>
+                                                <td class="price text-end">$350</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="number text-center">2</td>
+                                                <td class="image"><img src="https://www.bootdey.com/image/400x300/5F9EA0" alt=""></td>
+                                                <td class="product"><strong>Product 2</strong><br>This is the product description.</td>
+                                                <td class="rate text-end"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-o"></i><i class="fa fa-star-o"></i></span></td>
+                                                <td class="price text-end">$1,050</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="number text-center">3</td>
+                                                <td class="image"><img src="https://www.bootdey.com/image/400x300" alt=""></td>
+                                                <td class="product"><strong>Product 3</strong><br>This is the product description.</td>
+                                                <td class="rate text-end"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star-half-o"></i><i class="fa fa-star-o"></i></span></td>
+                                                <td class="price text-end">$2,100</td>
+                                            </tr>
+                                            <tr>
+                                                <td class="number text-center">4</td>
+                                                <td class="image"><img src="https://www.bootdey.com/image/400x300" alt=""></td>
+                                                <td class="product"><strong>Product 4</strong><br>This is the product description.</td>
+                                                <td class="rate text-end"><span><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i><i class="fa fa-star"></i></span></td>
+                                                <td class="price text-end">$5,600</td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                                <!-- END TABLE RESULT -->
+                            </div>
+                            <!-- END RESULT -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- END SEARCH RESULT -->
+        </div>
+    </div>
+</body>
+
+
+
+@code {
+
+}

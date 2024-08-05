@@ -1,3 +1,4 @@
+using MailerSend.AspNetCore;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Components.WebAssembly.Authentication;
 using Microsoft.AspNetCore.ResponseCompression;
@@ -5,9 +6,11 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using RentHome.Client.Services.AccountServices;
+using RentHome.Client.Services.AppointmentServices;
 using RentHome.Server.Data;
 using RentHome.Server.Repositories.AccountRepositories;
 using RentHome.Server.Repositories.AgentRepositories;
+using RentHome.Server.Repositories.AppointmentRepositories;
 using RentHome.Server.Repositories.HouseRepositories;
 using RentHome.Server.Repositories.ModeRepositories;
 using Swashbuckle.AspNetCore.Filters;
@@ -40,13 +43,14 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["JwtSettings:Key"]!))
     };
 });
+
 builder.Services.AddAuthorization();
 builder.Services.AddScoped<ImageHandler>();
 builder.Services.AddScoped<IHouseRepo, HouseRepo>();
 builder.Services.AddScoped<IModeRepo, ModeRepo>();
 builder.Services.AddScoped<IAccountRepo, AccountRepo>();
 builder.Services.AddScoped<IAgentRepo, AgentRepo>();
-
+builder.Services.AddScoped<IAppointmentRepo , AppointmentRepo>();
 
 
 builder.Services.AddCors(options =>

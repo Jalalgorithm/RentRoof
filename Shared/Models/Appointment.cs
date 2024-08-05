@@ -11,7 +11,7 @@ namespace RentHome.Shared.Models
         public int Id { get; set; }
         public int HouseId { get; set; }
         public House House { get; set; }
-
+        public bool IsConfirmed { get; set; }
         public int AgentId { get; set; }
         public Agent Agent { get; set; }
 

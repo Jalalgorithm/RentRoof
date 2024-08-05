@@ -48,11 +48,6 @@ namespace RentHome.Server.Controllers
 
             var result = await accountRepo.LoginAgent(agentLogin);
 
-            if(!result.Success)
-            {
-                return BadRequest("Couldnt complete log in operation");
-            }
-
             return Ok(result);
         }
 
@@ -68,7 +63,7 @@ namespace RentHome.Server.Controllers
 
             if(!result.Success)
             {
-                return NotFound("Couldnt complete sig in request");
+                return NotFound("Couldnt complete sign in request");
             }
 
             return Ok(result);

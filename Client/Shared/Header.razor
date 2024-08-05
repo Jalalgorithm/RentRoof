@@ -10,7 +10,7 @@
                 <img class="img-fluid"
                      src="landlord.png"
                      alt="Icon"
-                     style="width: 90px; height: 90px" />
+                     style="width: 90px; height: 50px" />
             </div>
             <h1>LandLord</h1>
         </a>
@@ -32,17 +32,17 @@
                         <a href="property-list" class="dropdown-item">Property List</a>
                         <a href="property-type" class="dropdown-item">Property Type</a>
                         <a href="property-agents" class="dropdown-item">Property Agent</a>
-                        <a href="search" class="dropdown-item">Search Properties</a>
+                        <a href="contact" class="dropdown-item">Search Properties</a>
                     </div>
                 </div>
 
                 <div class="nav-item dropdown">
                     <a href="#"
                        class="nav-link dropdown-toggle"
-                       data-bs-toggle="dropdown">Contact</a>
+                       data-bs-toggle="dropdown">Agent</a>
                     <div class="dropdown-menu rounded-0 m-0">
-                        <a href="testimonial" class="dropdown-item">Testimonial</a>
-                        <a href="contact" class="dropdown-item">Contact</a>
+                        <a href="register-asagent" class="dropdown-item">Become an Agent</a>
+                        <a href="searchresults" class="dropdown-item">Contact</a>
 
                     </div>
                 </div>
@@ -55,7 +55,7 @@
                        data-bs-toggle="dropdown"><i class="bi bi-person-circle"></i></a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="myprofile"  class="dropdown-item">My Profile</a>
-                        <a href="#" class="dropdown-item" @onclick="Logout" style="cursor:pointer" >Logout</a>
+                        <a href="" class="dropdown-item" @onclick="Logout" style="cursor:pointer" >Logout</a>
 
                     </div>
                 </div>
@@ -64,7 +64,7 @@
                 
             </div>
 
-          <AuthorizeView Roles="Admin">
+          <AuthorizeView Roles="Agent">
               <Authorized>
                     <NavLink href="property-add" class="btn btn-primary px-3 d-none d-lg-flex ml-2 ">Add Property</NavLink>
 

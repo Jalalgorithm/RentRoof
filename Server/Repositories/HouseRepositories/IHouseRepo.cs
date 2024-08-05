@@ -12,6 +12,8 @@ namespace RentHome.Server.Repositories.HouseRepositories
         Task<List<HouseResponseDTO>> GetHouseData();
         Task<HouseResponseDetail> GetHouseDataById(int id);
         Task<List<GetPropertyTypeDTO>> GetPropertyType();
+        Task<List<HouseResponseDTO>> SearchHouse(SearchDTO searchDTO);
+        Task<List<HouseResponseDTO>> GetHousesByPropertyType(int id);
 
     }
 }

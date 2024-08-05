@@ -3,6 +3,8 @@
 @inject IHouseService houseService
 @inject SweetAlertService swal
 @inject NavigationManager navigationManager
+@inject IAppointmentService appointmentService
+@inject BookingService bookingService
 
 
 
@@ -114,7 +116,20 @@
 
                         
                         
-                    <a href="#" class="btn btn-light border border-secondary py-2 icon-hover px-3"> <i class="bi bi-calendar-check-fill"></i> Book an Appointment </a>
+                    <button class="btn btn-light border border-secondary" @onclick="()=>HandleBooking(houseResponse.Id)" disabled="@isAppointing">
+                        @if (isAppointing)
+                        {
+                            <div class="spinner-border" role="status">
+                                <span class="visually-hidden">Loading...</span>
+                            </div>
+                        }
+                        else
+                        {
+                            <i class="bi bi-calendar-check-fill"></i>
+
+                        }
+                        
+                         Book an Appointment </button>
                 </div>
             </main>
         </div>
@@ -126,6 +141,7 @@
 
     HouseResponseDetail houseResponse = new HouseResponseDetail();
     private bool isLoading = false;
+    private bool isAppointing = false;
     private Response result;
 
     [Parameter]
@@ -149,7 +165,7 @@
                 ShowCancelButton = true,
                 ConfirmButtonText = "Yes , delete it",
                 CancelButtonText = "No keep it"
-            });
+        });
 
         if (reply.IsConfirmed)
         {
@@ -181,6 +197,56 @@
             await swal.FireAsync("Cancelled", "Your property is safe: ", SweetAlertIcon.Info);
             isLoading = false;
         }
+
+
+    }
+
+    private async Task HandleBooking(int id)
+    {
+        isAppointing = true;
+
+        var answer = await swal.FireAsync(new SweetAlertOptions
+        {
+                Title = "Are you Sure?",
+                Text = "Do you want to book an appointment for this property?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Yes , book it",
+                CancelButtonText = "No ,dont"
+        });
+
+        if(answer.IsConfirmed)
+        {
+
+            try
+            {
+                result = await appointmentService.BookAppointment(id);
+                if (result.Success)
+                {
+                    await swal.FireAsync("Booking", "Booking Successful", SweetAlertIcon.Success);
+                    bookingService.BookingMessage = result.Message;
+                    navigationManager.NavigateTo("/book-confirmation");
+                }
+                else
+                {
+                    await swal.FireAsync("Error", $"Error encountered {result.Message}", SweetAlertIcon.Error);
+
+                }
+            }
+            finally
+            {
+                isAppointing = false;
+            }
+
+        }
+
+        else if(answer.Dismiss ==DismissReason.Cancel)
+        {
+            await swal.FireAsync("Cancelled", "Your property is safe: ", SweetAlertIcon.Info);
+            isAppointing = false;
+        }
+
+
     }
 }
 

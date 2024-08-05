@@ -283,5 +283,76 @@ namespace RentHome.Server.Repositories.HouseRepositories
 
             return DoesExist == null ? false : true;
         }
+
+        public async Task<List<HouseResponseDTO>> SearchHouse(SearchDTO searchDTO)
+        {
+            IQueryable<House> query = _context.Houses
+                .Include(p => p.TypeOfProperty)
+                .Include(m => m.Mode);
+
+            if(searchDTO.Keyword is not null)
+            {
+                query = query.Where(h => h.Name.Contains(searchDTO.Keyword) || h.Description.Contains(searchDTO.Keyword));
+            }
+
+            if(searchDTO.PropertyTypeId is not null)
+            {
+                query = query.Where(h => h.TypeOfPropertyId == searchDTO.PropertyTypeId);
+            }
+
+            if (searchDTO.Location is not null)
+            {
+                query = query.Where(h => h.Location.Contains(searchDTO.Location));
+            }
+
+            int page = 1;
+            int pageSize = 10;
+            int totalPages = 0;
+
+            decimal count = query.Count();
+            totalPages = (int)Math.Ceiling(count / pageSize);
+
+            query = query.Skip((int)(page - 1) * pageSize).Take(pageSize);
+
+            var house = await query
+                .Select(property => new HouseResponseDTO
+                {
+                    Id = property.Id,
+                    Name = property.Name,
+                    Location = property.Location,
+                    Price = property.Price,
+                    Size = property.Size,
+                    NumberOfBathroom = property.NumberOfBathroom,
+                    NumberOfBedroom = property.NumberOfBedroom,
+                    Image = property.Image,
+                    Mode = property.Mode.Name,
+                    TypeofProperty = property.TypeOfProperty.Name
+                }).ToListAsync();
+
+
+            return house!;
+        }
+
+        public async Task<List<HouseResponseDTO>> GetHousesByPropertyType(int id)
+        {
+            var house = await _context.Houses
+                .Include(m=>m.Mode)
+                .Include(p=>p.TypeOfProperty)
+                .Select(myProperty => new HouseResponseDTO
+                {
+                    Id = myProperty.Id,
+                    Name = myProperty.Name,
+                    Location = myProperty.Location,
+                    Price = myProperty.Price,
+                    Size = myProperty.Size,
+                    NumberOfBathroom = myProperty.NumberOfBathroom,
+                    NumberOfBedroom = myProperty.NumberOfBedroom,
+                    Image= myProperty.Image,
+                    Mode = myProperty.Mode.Name,
+                    TypeofProperty = myProperty.TypeOfProperty.Name
+                }).Where(p=>p.TypeofPropertyId==id).ToListAsync();
+
+            return house!;
+        }
     }
 }

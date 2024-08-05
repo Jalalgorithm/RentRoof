@@ -85,7 +85,7 @@
                                     </EditForm>
                                     <div class="row">
                                         <div class="col-12">
-                                            <p class="mb-0 mt-4 text-secondary text-center">Already have an account? <a href="#!" class="link-primary text-decoration-none">Sign in</a></p>
+                                            <p class="mb-0 mt-4 text-secondary text-center">Already have an account? <a href="agent-login" class="link-primary text-decoration-none">Sign in</a></p>
                                         </div>
                                     </div>
                                 </div>
@@ -103,7 +103,7 @@
 
 @code {
     RegisterAgentDTO NewAgent = new();
-    private bool isLoading = true;
+    private bool isLoading = false;
     private Response result;
 
 

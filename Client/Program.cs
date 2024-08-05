@@ -8,6 +8,7 @@ using RentHome.Client;
 using RentHome.Client.Handler;
 using RentHome.Client.Services.AccountServices;
 using RentHome.Client.Services.AgentServices;
+using RentHome.Client.Services.AppointmentServices;
 using RentHome.Client.Services.HouseServices;
 using RentHome.Client.Services.ModeServices;
 
@@ -33,8 +34,8 @@ builder.Services.AddScoped<IHouseService ,HouseService>();
 builder.Services.AddScoped<IModeService,ModeService>();
 builder.Services.AddScoped<IAccountService , AccountService>();
 builder.Services.AddScoped<IAgentService, AgentService>();
-
-
+builder.Services.AddScoped<IAppointmentService , AppointmentService>();
+builder.Services.AddSingleton<BookingService>();
 
 
 await builder.Build().RunAsync();

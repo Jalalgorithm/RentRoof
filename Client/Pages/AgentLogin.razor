@@ -69,7 +69,7 @@
                             <div class="col-12">
                                 <hr class="mt-4 mb-3 border-secondary-subtle">
                                 <div class="d-flex gap-2 gap-md-3 flex-column flex-md-row justify-content-md-end">
-                                    <a href="#!" class="link-secondary text-decoration-none">Create new account</a>
+                                    <a href="register-asagent" class="link-secondary text-decoration-none">Create new account</a>
                                     <a href="#!" class="link-secondary text-decoration-none">Forgot password</a>
                                 </div>
                             </div>
@@ -129,7 +129,7 @@
         {
             isLoading = false;
         }
-        if (result.Success)
+        if (result.Success == true)
         {
             await swal.FireAsync("Welcome", "You are logged in", SweetAlertIcon.Success);
             var token = result.Message;
@@ -139,7 +139,7 @@
             navigationManager.NavigateTo("/");
 
         }
-        else
+        else if(result.Success==false)
         {
             await swal.FireAsync("Error", result.Message, SweetAlertIcon.Error);
         }
