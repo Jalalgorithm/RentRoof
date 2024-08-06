@@ -114,22 +114,34 @@
                         Delete Property
                     </button >
 
-                        
-                        
-                    <button class="btn btn-light border border-secondary" @onclick="()=>HandleBooking(houseResponse.Id)" disabled="@isAppointing">
-                        @if (isAppointing)
-                        {
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <i class="bi bi-calendar-check-fill"></i>
 
-                        }
+                    @if (isBooked)
+                    {
+                        <button type="button" class="btn border ms-1 btn-success" @ disabled>
+                            <i class="bi bi-calendar-check"></i> Booked
+                        </button>
+                    }
+                    else
+                    {
+                        <button class="btn btn-light border ms-1 border-secondary" @onclick="()=>HandleBooking(houseResponse.Id)" disabled="@isAppointing">
+                            @if (isAppointing)
+                            {
+                                <div class="spinner-border" role="status">
+                                    <span class="visually-hidden">Loading...</span>
+                                </div>
+                            }
+                            else
+                            {
+                                <i class="bi bi-calendar-check-fill"></i>
+
+                            }
+
+                            Book an Appointment
+                        </button>
+                    }
+
                         
-                         Book an Appointment </button>
+                    
                 </div>
             </main>
         </div>
@@ -143,6 +155,7 @@
     private bool isLoading = false;
     private bool isAppointing = false;
     private Response result;
+    private bool isBooked;
 
     [Parameter]
     public int Id { get; set; }
@@ -151,6 +164,17 @@
     protected async override Task OnParametersSetAsync()
     {
         houseResponse = await houseService.GetHouseData(Id);
+
+        // result = await appointmentService.AlreadyBooked(houseResponse.Id);
+
+        // if (result.Message == "1")
+        // {
+        //     isBooked = true;
+        // }
+        // else if (result.Message == "0")
+        // {
+        //     isBooked = false;
+        // }
     }
 
     private async Task HandleDeleteSelect(int id)
@@ -247,6 +271,24 @@
         }
 
 
+    }
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    private async Task GetData()
+    {
+        result = await appointmentService.AlreadyBooked(Id);
+        if (result.Message == "1")
+        {
+            isBooked = true;
+        }
+        else if (result.Message == "0")
+        {
+            isBooked = false;
+        }
     }
 }
 

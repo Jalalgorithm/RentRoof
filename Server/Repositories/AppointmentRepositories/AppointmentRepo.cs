@@ -16,6 +16,29 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
             this.dbContext = dbContext;
         }
 
+        public async Task<Response> AlreadyBooked(int userId, int propertyId)
+        {
+            var booked = await dbContext.Appointments
+                .FirstOrDefaultAsync(x => x.UserId == userId && x.HouseId == propertyId);
+
+            if (booked == null)
+            {
+                return new Response
+                {
+                    Success = true,
+                    Message = "0"
+                };
+            }
+
+            return new Response
+            {
+                Success = true,
+                Message = "1"
+            };
+
+
+        }
+
         public async Task<Response> BookAppointment(int userId,int id)
         {
             if (userId == 0)
@@ -29,7 +52,7 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
 
             var property = await dbContext.Houses
                 .Include(a => a.Agent)
-                .FirstOrDefaultAsync(x => x.Id == id);
+                .FirstOrDefaultAsync(x => x.Id == id );
 
             if (property == null)
             {
@@ -40,9 +63,11 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
                 };
             }
 
+            
+
             var appointment = new Appointment()
             {
-                HouseId = id,
+                HouseId = property.Id,
                 UserId = userId,
                 AgentId =property.AgentId, 
                 AppointmentDate = GenerateRandomDate(),
@@ -50,6 +75,15 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
 
             };
 
+            var user = await dbContext.Users.FindAsync(userId);
+            if(user is null)
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "User not found"
+                };
+            }
 
             await dbContext.Appointments.AddAsync(appointment);
             await dbContext.SaveChangesAsync();
@@ -58,10 +92,74 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
             return new Response
             {
                 Success = true,
-                Message = $"Appointment for {property.Name} , is slated for {appointment.AppointmentDate} , with our Agent {property.Agent.FirstName}. This is a notice of booking further communication will be sent to your mail , Thank you."
+                Message = $" Dear {user.FirstName} , Your Appointment for {property.Name} , is slated for {appointment.AppointmentDate} , with our Agent {property.Agent.FirstName}. This is a notice of booking and doesnt confirm this meeting,  further communication will be sent to your mail , Thank you."
             };
 
            
+        }
+
+        public async Task<Response> ConfirmAppointment(int id)
+        {
+            var appointment = await dbContext.Appointments.FindAsync(id);
+
+            if(appointment is null)
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "Appointment not found"
+                };
+            }
+
+            appointment.IsConfirmed = true;
+
+            await dbContext.SaveChangesAsync();
+
+            return new Response
+            {
+                Success = true,
+                Message = "Appointment now confirmed and booked to hold"
+            };
+        }
+
+        public async Task<Response> DeleteAppointment(int id)
+        {
+            var delAppointment = await dbContext.Appointments.FindAsync(id);
+
+            if (delAppointment is null)
+            {
+                return new Response
+                {
+                    Success = false,
+                    Message = "appointment not found"
+                };
+            }
+
+            dbContext.Appointments.Remove(delAppointment);
+            await dbContext.SaveChangesAsync();
+
+            return new Response
+            {
+                Success = true,
+                Message = "Appointment has been fufilled and thereby removed"
+            };
+        }
+
+        public async Task<List<GetBookingDTO>> GetBookingsForAgent(int agentId)
+        {
+            var bookings = await dbContext.Appointments
+                .Include(h => h.House)
+                .Include(u => u.User)
+                .Where(x=>x.AgentId==agentId)
+                .Select(appoint => new GetBookingDTO
+                {
+                    Id = appoint.Id,
+                    PropertyName = appoint.House.Name,
+                    isConfirmed = appoint.IsConfirmed,
+                    User = appoint.User.FirstName
+                }).ToListAsync();
+
+            return bookings!;
         }
 
         private DateTime GenerateRandomDate()

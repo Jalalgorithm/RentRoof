@@ -6,6 +6,7 @@ using RentHome.Server.Repositories.AppointmentRepositories;
 using RentHome.Shared.CustomResponse;
 using RentHome.Shared.DTOs;
 using System.Security.Claims;
+using System.Text.RegularExpressions;
 
 namespace RentHome.Server.Controllers
 {
@@ -37,6 +38,86 @@ namespace RentHome.Server.Controllers
             if(!result.Success)
             {
                 return NotFound("Unable to complete");
+            }
+            return Ok(result);
+        }
+
+        [Authorize (Roles ="Agent")]
+        [HttpGet("Getbooks")]
+        public async Task<ActionResult<List<GetBookingDTO>>> GetAgentAppointmentList()
+        {
+            var AgentId = JwtReader.GetUserId(User);
+
+            var result = await appointmentRepo.GetBookingsForAgent(AgentId);
+
+            if(result==null)
+            {
+                return BadRequest("no bookings found");
+            }
+
+            return Ok(result);
+        }
+
+        [Authorize(Roles ="Agent")]
+        [HttpPut("ConfirmBooking/{id}")]
+        public async Task<ActionResult<Response>> ConfirmAppointment(int id)
+        {
+            if(id<=0)
+            {
+                return BadRequest("wrong or invalid id");
+            }
+
+            var result = await appointmentRepo.ConfirmAppointment(id);
+
+            if(!result.Success)
+            {
+                return NotFound("couldnt confirm appointment");
+            }
+
+            return Ok(result);
+
+
+        }
+
+        [Authorize (Roles ="Agent")]
+        [HttpDelete("FufillBooking/{id}")]
+        public async Task<ActionResult<Response>> FulfilledBooking(int id)
+        {
+            if(id<=0)
+            {
+                return BadRequest("invalid id");
+            }
+
+            var result = await appointmentRepo.DeleteAppointment(id);
+
+            if(!result.Success)
+            {
+                return NotFound("couldnt complete");
+            }
+
+            return Ok(result);
+        }
+
+        [HttpGet("GetBookingStatus/{propertyId}")]
+        public async Task<ActionResult<Response>> GetStatus(int propertyId)
+        {
+            var userId = JwtReader.GetUserId(User);
+            if(userId==0)
+            {
+                return BadRequest("Invalid userid");
+
+            }
+            if (propertyId<=0)
+            {
+                return BadRequest("Invalid propertyid");
+            }
+
+            var result = await appointmentRepo.AlreadyBooked(userId, propertyId);
+
+            if(!result.Success)
+            {
+                return NotFound("couldnt complete");
+
             }
             return Ok(result);
         }
