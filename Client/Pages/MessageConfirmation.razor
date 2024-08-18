@@ -1,8 +1,8 @@
-﻿@page "/book-confirmation"
+﻿@page "/book-appointment"
 
-@inject BookingService bookingService
+@inject ConfirmBookingForAgent bookingForAgent
 
-@attribute [Authorize(Roles ="Client")]
+@attribute [Authorize(Roles = "Agent")]
 
 <div class="container" style="max-width: 600px; margin: 0 auto; background-color: #f6f6f6;">
     <div class="row">
@@ -14,7 +14,6 @@
                     <span style="margin-top: 10px; display: block;">Congratulations: Your application is successful!</span>
                 </div>
                 <div class="card-body" style="padding: 20px;">
-                    
                     <p>@message</p>
                     <a href="#" class="btn btn-primary" style="background-color: #f1556c; border-color: #f1556c;">Back to Home</a>
                     <p style="margin-top: 20px;">Thanks for choosing <b>LandLord</b> </p>
@@ -30,13 +29,10 @@
 
 @code {
 
-
     private string message { get; set; }
 
     protected override void OnInitialized()
     {
-        message = bookingService.BookingMessage;
+        message = bookingForAgent.Message;
     }
-
 }
-

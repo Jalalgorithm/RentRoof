@@ -25,7 +25,7 @@ builder.Services.AddScoped<CustomAuthorizationHandler>();
 builder.Services.AddHttpClient<AccountService>( client => client.BaseAddress = new Uri(builder.HostEnvironment.BaseAddress))
     .AddHttpMessageHandler<CustomAuthorizationHandler>();
 
-builder.Services.AddSweetAlert2();
+builder.Services.AddSweetAlert2(); 
 
 builder.Services.AddScoped<AuthenticationStateProvider , CustomAuthStateProvider>();
 builder.Services.AddAuthorizationCore();
@@ -36,6 +36,8 @@ builder.Services.AddScoped<IAccountService , AccountService>();
 builder.Services.AddScoped<IAgentService, AgentService>();
 builder.Services.AddScoped<IAppointmentService , AppointmentService>();
 builder.Services.AddSingleton<BookingService>();
+builder.Services.AddSingleton<ConfirmBookingForAgent>();
+
 
 
 await builder.Build().RunAsync();

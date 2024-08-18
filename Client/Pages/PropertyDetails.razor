@@ -5,6 +5,7 @@
 @inject NavigationManager navigationManager
 @inject IAppointmentService appointmentService
 @inject BookingService bookingService
+@inject AuthenticationStateProvider authProvider
 
 
 
@@ -70,12 +71,12 @@
                             <i class="fas fa-star-half-alt"></i>
                             <span class="ms-1">4.5</span>
                         </div>
-                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>154 orders</span>
-                        <span class="text-success ms-2">In stock</span>
+                        <span class="text-muted"><i class="fas fa-shopping-basket fa-sm mx-1"></i>156 Booked</span>
+                        <span class="text-success ms-2">Still Open</span>
                     </div>
 
                     <div class="mb-3">
-                        <span class="h5">&#8358;@houseResponse.Price</span>
+                        <span class="h5">&#8358;@houseResponse.Price.ToString("N0")</span>
                         <span class="text-muted">@houseResponse.Mode</span>
                     </div>
 
@@ -97,49 +98,43 @@
 
                     <hr />
 
-                    
-                    <a href="#" class="btn btn-warning"> <i class="bi bi-arrow-up-circle"></i> Update Property </a>
-                    <button  class="btn btn-danger"  @onclick="()=>HandleDeleteSelect(houseResponse.Id)" disabled="@isLoading" > 
-                        @if (isLoading)
-                        {
-                            <div class="spinner-border" role="status">
-                                <span class="visually-hidden">Loading...</span>
-                            </div>
-                        }
-                        else
-                        {
-                            <i class="bi bi-trash3-fill"></i>
-                            
-                        }
-                        Delete Property
-                    </button >
-
-
-                    @if (isBooked)
-                    {
-                        <button type="button" class="btn border ms-1 btn-success" @ disabled>
-                            <i class="bi bi-calendar-check"></i> Booked
-                        </button>
-                    }
-                    else
-                    {
-                        <button class="btn btn-light border ms-1 border-secondary" @onclick="()=>HandleBooking(houseResponse.Id)" disabled="@isAppointing">
-                            @if (isAppointing)
+                    <AuthorizeView Roles="Client">
+                        <Authorized>
+                            @if (isBooked)
                             {
-                                <div class="spinner-border" role="status">
-                                    <span class="visually-hidden">Loading...</span>
-                                </div>
+                                <button type="button" class="btn border ms-1 btn-success" @ disabled>
+                                    <i class="bi bi-calendar-check"></i> Booked
+                                </button>
                             }
                             else
                             {
-                                <i class="bi bi-calendar-check-fill"></i>
+                                <button class="btn btn-light border ms-1 border-secondary" @onclick="()=>HandleBooking(houseResponse.Id)" disabled="@isAppointing">
+                                    @if (isAppointing)
+                                    {
+                                        <div class="spinner-border" role="status">
+                                            <span class="visually-hidden">Loading...</span>
+                                        </div>
+                                    }
+                                    else
+                                    {
+                                        <i class="bi bi-calendar-check-fill"></i>
 
+                                    }
+
+                                    Book an Appointment
+                                </button>
                             }
 
-                            Book an Appointment
-                        </button>
-                    }
+                        </Authorized>
 
+                        <NotAuthorized>
+                            <button type="button" class="btn ms-1 btn-outline-secondary" @onclick="()=>HandleAlternativeBooking()"><i class="bi bi-calendar-check-fill"></i> Book an Appointment</button>
+
+                        </NotAuthorized>
+                        
+                    </AuthorizeView>
+
+                    
                         
                     
                 </div>
@@ -165,64 +160,30 @@
     {
         houseResponse = await houseService.GetHouseData(Id);
 
-        // result = await appointmentService.AlreadyBooked(houseResponse.Id);
+        var authState = await authProvider.GetAuthenticationStateAsync();
+        var user = authState.User;
 
-        // if (result.Message == "1")
-        // {
-        //     isBooked = true;
-        // }
-        // else if (result.Message == "0")
-        // {
-        //     isBooked = false;
-        // }
+        if (user.Identity!=null && user.Identity.IsAuthenticated)
+        {
+            result = await appointmentService.AlreadyBooked(Id);
+
+            if (result.Message == "1")
+            {
+                isBooked = true;
+            }
+            else if (result.Message == "0")
+            {
+                isBooked = false;
+            }
+        }
+
+      
     }
 
-    private async Task HandleDeleteSelect(int id)
+
+    private async Task HandleAlternativeBooking()
     {
-        isLoading = true;
-
-        var reply = await swal.FireAsync(new SweetAlertOptions
-            {
-                Title = "Are you Sure?",
-                Text = "Do you want to delete this property?",
-                Icon = SweetAlertIcon.Warning,
-                ShowCancelButton = true,
-                ConfirmButtonText = "Yes , delete it",
-                CancelButtonText = "No keep it"
-        });
-
-        if (reply.IsConfirmed)
-        {
-
-            try
-            {
-                result = await houseService.DeleteHouseData(id);
-                if (result.Success)
-                {
-                    await swal.FireAsync("Deleted", "Your Property has been deleted", SweetAlertIcon.Success);
-                    navigationManager.NavigateTo("/");
-                }
-
-
-                else
-                {
-                    await swal.FireAsync("Error", $"Error encountered {result.Message}", SweetAlertIcon.Error);
-                }
-
-            }
-            finally
-            {
-                isLoading = false;
-            }
-        }
-
-        else if (reply.Dismiss == DismissReason.Cancel)
-        {
-            await swal.FireAsync("Cancelled", "Your property is safe: ", SweetAlertIcon.Info);
-            isLoading = false;
-        }
-
-
+        navigationManager.NavigateTo("/userlogin");
     }
 
     private async Task HandleBooking(int id)
@@ -273,23 +234,23 @@
 
     }
 
-    protected override async Task OnInitializedAsync()
-    {
-        await GetData();
-    }
+    // protected override async Task OnInitializedAsync()
+    // {
+    //     await GetData();
+    // }
 
-    private async Task GetData()
-    {
-        result = await appointmentService.AlreadyBooked(Id);
-        if (result.Message == "1")
-        {
-            isBooked = true;
-        }
-        else if (result.Message == "0")
-        {
-            isBooked = false;
-        }
-    }
+    // private async Task GetData()
+    // {
+    //     result = await appointmentService.AlreadyBooked(Id);
+    //     if (result.Message == "1")
+    //     {
+    //         isBooked = true;
+    //     }
+    //     else if (result.Message == "0")
+    //     {
+    //         isBooked = false;
+    //     }
+    // }
 }
 
 

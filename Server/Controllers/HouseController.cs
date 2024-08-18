@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using RentHome.Server.Data;
 using RentHome.Server.Repositories.HouseRepositories;
 using RentHome.Shared.CustomResponse;
 using RentHome.Shared.DTOs;
@@ -80,7 +81,9 @@ namespace RentHome.Server.Controllers
                 return NoContent();
             }
 
-            var result = await houseRepo.AddHouseData(requestDTO);
+            var agentId = JwtReader.GetUserId(User);
+
+            var result = await houseRepo.AddHouseData(requestDTO , agentId);
 
             if(!result.Success)
             {

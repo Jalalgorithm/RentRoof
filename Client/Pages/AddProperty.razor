@@ -6,6 +6,11 @@
 @inject NavigationManager navigationManager
 @inject IAgentService agentService
 @inject SweetAlertService swal
+@inject AccountService accountService
+@inject AuthenticationStateProvider AuthenticationStateProvider
+
+@attribute [Authorize(Roles ="Agent")]
+
 
 
 
@@ -91,19 +96,12 @@
                 <InputNumber id="Price" @bind-Value="houseRequestDTO.Price" class="form-control" placeholder="Price of Proerty" />
             </div>
 
-            <label for="Propert Agent" class="form-label">Agents</label>
+            <label for="Propert Agenty" class="form-label">Agent</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-receipt"></i>
                 </span>
-                <InputSelect id="mode" @bind-Value="houseRequestDTO.AgentId" class="form-select">
-                    <option selected>Open this select menu</option>
-                    @foreach (var Agent in getAgents)
-                    {
-                        <option value="@Agent.Id">@Agent.FirstName @Agent.LastName</option>
-                    }
-
-                </InputSelect>
+                <input id="disabledInput" type="text" class="form-control" placeholder="@agentProfile.FirstName  @agentProfile.LastName" disabled />
             </div>
 
             <label for="Propert Mode" class="form-label">Mode</label>
@@ -166,15 +164,21 @@
     HouseRequestDTO houseRequestDTO = new HouseRequestDTO();
     List<ModeResponseDTO> modeResponses = new();
     List<GetPropertyTypeDTO> getPropertyTypes = new();
-    List<GetAgentDTO> getAgents = new();
+    AgentProfileDTO agentProfile = new();
     private IBrowserFile imageFile;
     List<IBrowserFile> OtherImagesFiles = new();
     private bool isLoading = false;
+    private ClaimsPrincipal user;
+    private string role;
     private Response result;
 
 
     protected async override Task OnInitializedAsync()
     {
+        var authState = await AuthenticationStateProvider.GetAuthenticationStateAsync();
+        user = authState.User;
+        role = user.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Role)?.Value!;
+
         await GetData();
     }
 
@@ -203,13 +207,16 @@
             await swal.FireAsync("Add Property", "Couldnt add your property", SweetAlertIcon.Error);
         }
 
-        
+
     }
     private async Task GetData()
     {
         modeResponses= await modeService.GetAllMode();
         getPropertyTypes = await houseService.GetPropertyTypeList();
-        getAgents = await agentService.GetAgents();
+        if (role == "Agent")
+        {
+            agentProfile = await accountService.GetAgentProfile();
+        }
     }
 
     public async Task Failed()

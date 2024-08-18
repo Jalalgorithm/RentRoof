@@ -10,11 +10,9 @@
             <div class="col-lg-6">
                 <div class="text-start mx-auto mb-5 wow slideInLeft"
                      data-wow-delay="0.1s">
-                    <h1 class="mb-3">Property Listing</h1>
+                    <h1 class="mb-3">Welcome to LandLord</h1>
                     <p>
-                        Eirmod sed ipsum dolor sit rebum labore magna erat. Tempor ut
-                        dolore lorem kasd vero ipsum sit eirmod sit diam justo sed
-                        rebum.
+                        Your one stop location for finding a home that suits you , your family or your preference.
                     </p>
                 </div>
             </div>
@@ -59,7 +57,7 @@
                                         </div>
                                     </div>
                                     <div class="p-4 pb-0">
-                                        <h5 class="text-primary mb-3">&#8358;@item.Price</h5>
+                                        <h5 class="text-primary mb-3">&#8358;@item.Price.ToString("N0")</h5>
                                         <a class="d-block h5 mb-2" href="/property-details/@item.Id">@item.Name</a>
                                         <p>
                                             <i class="fa fa-map-marker-alt text-primary me-2"></i>@item.Location

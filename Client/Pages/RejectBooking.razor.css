@@ -1,0 +1,11 @@
+﻿.card {
+    border-radius: 0.75rem;
+}
+
+.card-header {
+    border-radius: 0.75rem 0.75rem 0 0;
+}
+
+.card-footer {
+    border-radius: 0 0 0.75rem 0.75rem;
+}

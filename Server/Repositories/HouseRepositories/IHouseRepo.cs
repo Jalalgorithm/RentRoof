@@ -6,7 +6,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
 {
     public interface IHouseRepo
     {
-        Task<Response> AddHouseData(HouseRequestDTO houseRequestDTO);
+        Task<Response> AddHouseData(HouseRequestDTO houseRequestDTO , int agentId);
         Task<Response> UpdateHouseData(HouseRequestDTO houseRequestDTO , int id);
         Task<Response> DeleteHouseData(int id);
         Task<List<HouseResponseDTO>> GetHouseData();

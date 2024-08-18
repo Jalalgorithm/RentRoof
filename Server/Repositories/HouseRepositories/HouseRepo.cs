@@ -18,7 +18,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
             this.imageHandler = imageHandler;
         }
 
-        public async Task<Response> AddHouseData(HouseRequestDTO houseRequestDTO)
+        public async Task<Response> AddHouseData(HouseRequestDTO houseRequestDTO , int agentId)
         {
             if (houseRequestDTO == null)
             {
@@ -78,7 +78,7 @@ namespace RentHome.Server.Repositories.HouseRepositories
                 NumberOfBathroom = houseRequestDTO.NumberOfBathroom,
                 Price = houseRequestDTO.Price,
                 ModeId = houseRequestDTO.ModeId,
-                AgentId = houseRequestDTO.AgentId,
+                AgentId = agentId,
                 TypeOfPropertyId = houseRequestDTO.TypeofPropertyId,
                 Size = houseRequestDTO.Size,
                 Location = houseRequestDTO.Location,
@@ -244,7 +244,6 @@ namespace RentHome.Server.Repositories.HouseRepositories
             mainHouse.Description = houseRequestDTO.Description;
             mainHouse.Location = houseRequestDTO.Location;
             mainHouse.ModeId = houseRequestDTO.ModeId;
-            mainHouse.AgentId = houseRequestDTO.AgentId;
             mainHouse.TypeOfPropertyId = houseRequestDTO.TypeofPropertyId;
             mainHouse.NumberOfBathroom = houseRequestDTO.NumberOfBathroom;
             mainHouse.NumberOfBedroom = houseRequestDTO.NumberOfBedroom;

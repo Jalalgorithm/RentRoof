@@ -41,7 +41,6 @@ namespace RentHome.Client.Services.HouseServices
             content.Add(new StringContent(houseRequest.Description), "Description");
             content.Add(new StringContent(houseRequest.ModeId.ToString()), "ModeId");
             content.Add(new StringContent(houseRequest.TypeofPropertyId.ToString()), "TypeofPropertyId");
-            content.Add(new StringContent(houseRequest.AgentId.ToString()), "AgentId");
             content.Add(new StringContent(houseRequest.Location ?? ""), "Location");
             content.Add(new StringContent(houseRequest.Price.ToString()), "Price");
             content.Add(new StringContent(houseRequest.Size.ToString()), "Size");

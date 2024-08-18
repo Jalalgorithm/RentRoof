@@ -1,5 +1,195 @@
-﻿<h3>ApproveBooking</h3>
+﻿@page "/approve-booking"
+
+
+@inject IAgentService agentService
+@inject SweetAlertService swal
+@inject IHouseService houseService
+@inject NavigationManager navigationManager
+@inject IAppointmentService appointmentService
+@inject ConfirmBookingForAgent bookingForAgent
+
+@attribute [Authorize(Roles = "Agent")]
+
+
+<div class="container mt-5">
+    <h2 class="mb-4 text-center">Agent's Awaiting Appoiment Approval</h2>
+
+    <div class="table-responsive">
+        <table class="table table-hover table-bordered">
+            <thead class="table-dark">
+                <tr>
+                    <th scope="col">#</th>
+                    <th scope="col">User Name</th>
+                    <th scope="col">Property Name</th>
+                    <th scope="col">Property Location</th>
+                    <th scope="col">Property Date</th>
+                    <th scope="col">Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var details in awaitingAgent)
+                {
+                    <tr>
+                        <th scope="row">@details.Id</th>
+                        <td>@details.FirstName   @details.LastName</td>
+                        <td>@details.PropertyName</td>
+                        <td>@details.PropertyLocation</td>
+                        <td>@details.AppointmentDate</td>
+
+                        <td class="text-end">
+                            <button class="btn btn-sm btn-primary me-2" @onclick="() => ConfirmAppointment(details.Id)" disabled="@isUpdating">
+
+                                @if (isUpdating)
+                                {
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-arrow-up-circle"></i>
+
+                                }
+                                Confirm
+                            </button>
+                            <button class="btn btn-sm btn-danger" @onclick="() => RejectAppointment(details.Id)" disabled="@isLoading">
+                                @if (isLoading)
+                                {
+                                    <div class="spinner-border" role="status">
+                                        <span class="visually-hidden">Loading...</span>
+                                    </div>
+                                }
+                                else
+                                {
+                                    <i class="bi bi-trash3-fill"></i>
+
+                                }
+                                Reject
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>
+
+
 
 @code {
+    List<AppointmentAwaitingDTO> awaitingAgent = new();
+    private bool isLoading = false;
+    private bool isUpdating = false;
+
+    private Response result;
+
+
+
+    protected override async Task OnInitializedAsync()
+    {
+        await GetData();
+    }
+
+    private async Task GetData()
+    {
+        awaitingAgent = await agentService.GetAppointmentAwaiting();
+    }
+
+    private async Task ConfirmAppointment(int id)
+    {
+
+        isUpdating = true;
+
+        var reply = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Are you Sure?",
+                Text = "Do you want to confirm this appointment?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Yes , confirm  it",
+                CancelButtonText = "No"
+            });
+
+        if (reply.IsConfirmed)
+        {
+
+            try
+            {
+                result = await appointmentService.ConfirmAppointment(id);
+                if (result.Success)
+                {
+                    await swal.FireAsync("Confirmed", "Your Property has been confirmed", SweetAlertIcon.Success);
+                    bookingForAgent.Message = result.Message;
+                    navigationManager.NavigateTo("/book-appointment");
+                }
+
+
+                else
+                {
+                    await swal.FireAsync("Error", $"Error encountered {result.Message}", SweetAlertIcon.Error);
+                }
+
+            }
+            finally
+            {
+                isUpdating = false;
+            }
+        }
+
+        else if (reply.Dismiss == DismissReason.Cancel)
+        {
+            await swal.FireAsync("Cancelled", "Your property is safe: ", SweetAlertIcon.Info);
+            isLoading = false;
+        }
+    }
+
+
+    private async Task RejectAppointment(int id)
+    {
+        isLoading = true;
+
+        var reply = await swal.FireAsync(new SweetAlertOptions
+            {
+                Title = "Are you Sure?",
+                Text = "Do you want to reject this appointment?",
+                Icon = SweetAlertIcon.Warning,
+                ShowCancelButton = true,
+                ConfirmButtonText = "Yes , reject it",
+                CancelButtonText = "No keep it"
+            });
+
+        if (reply.IsConfirmed)
+        {
+
+            try
+            {
+                result = await appointmentService.DeleteAppointment(id);
+                if (result.Success)
+                {
+                    await swal.FireAsync("Rejected", "Your appointment schedule has been cancelled", SweetAlertIcon.Success);
+                    bookingForAgent.Message = result.Message;
+                    navigationManager.NavigateTo("/reject");
+                }
+
+
+                else
+                {
+                    await swal.FireAsync("Error", $"Error encountered {result.Message}", SweetAlertIcon.Error);
+                }
+
+            }
+            finally
+            {
+                isLoading = false;
+            }
+        }
+
+        else if (reply.Dismiss == DismissReason.Cancel)
+        {
+            await swal.FireAsync("Cancelled", "Your property is safe: ", SweetAlertIcon.Info);
+            isLoading = false;
+        }
+
+    }
 
 }

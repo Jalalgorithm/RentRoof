@@ -32,7 +32,7 @@
                         <a href="property-list" class="dropdown-item">Property List</a>
                         <a href="property-type" class="dropdown-item">Property Type</a>
                         <a href="property-agents" class="dropdown-item">Property Agent</a>
-                        <a href="contact" class="dropdown-item">Search Properties</a>
+                        <a href="searchresult" class="dropdown-item">Search Properties</a>
                     </div>
                 </div>
 
@@ -42,7 +42,15 @@
                        data-bs-toggle="dropdown">Agent</a>
                     <div class="dropdown-menu rounded-0 m-0">
                         <a href="register-asagent" class="dropdown-item">Become an Agent</a>
-                        <a href="searchresults" class="dropdown-item">Contact</a>
+                        <AuthorizeView Roles="Agent">
+                            <Authorized>
+                                <a href="agent-prop" class="dropdown-item">My Property</a>
+                                <a href="approve-booking" class="dropdown-item">Awaiting Confirmation</a>
+
+
+                            </Authorized>
+                        </AuthorizeView>
+                        <a href="contact" class="dropdown-item">Contact</a>
 
                     </div>
                 </div>

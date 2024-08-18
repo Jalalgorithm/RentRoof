@@ -100,7 +100,9 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
 
         public async Task<Response> ConfirmAppointment(int id)
         {
-            var appointment = await dbContext.Appointments.FindAsync(id);
+            var appointment = await dbContext.Appointments
+                .Include(u=>u.User)
+                .FirstOrDefaultAsync(x=>x.Id == id);
 
             if(appointment is null)
             {
@@ -118,7 +120,7 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
             return new Response
             {
                 Success = true,
-                Message = "Appointment now confirmed and booked to hold"
+                Message =$"Appointment now confirmed and booked to hold with {appointment.User.FirstName + "" + appointment.User.LastName } with details {appointment.User.Email} and {appointment.User.Phone} please do well to communicate and meet in an open space. Thank you"
             };
         }
 
@@ -141,7 +143,7 @@ namespace RentHome.Server.Repositories.AppointmentRepositories
             return new Response
             {
                 Success = true,
-                Message = "Appointment has been fufilled and thereby removed"
+                Message = "Appointment has been declined and communicated with the user"
             };
         }
 

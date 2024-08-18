@@ -14,7 +14,6 @@ namespace RentHome.Shared.DTOs
         public int ModeId { get; set; }
         public int TypeofPropertyId { get; set; }
 
-        public int AgentId { get; set; }
         public string? Location { get; set; }
         public decimal Price { get; set; }
         public int Size { get; set; }

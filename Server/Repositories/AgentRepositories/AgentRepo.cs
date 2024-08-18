@@ -25,6 +25,40 @@ namespace RentHome.Server.Repositories.AgentRepositories
 
             return allAgent!;
         }
-            
+
+        public async Task<List<HouseResponseDTO>> GetAgentProperties(int agentId)
+        {
+            var agentProp = await applicationDb.Houses
+                .Where(x => x.AgentId == agentId)
+                .Select(houses => new HouseResponseDTO
+                {
+                    Id = houses.Id,
+                    Name = houses.Name,
+                    Location = houses.Location,
+                    Price = houses.Price,
+                }).ToListAsync();
+
+            return agentProp!;
+        }
+
+        public async Task<List<AppointmentAwaitingDTO>> GetUserAwaiting(int agentId)
+        {
+
+            var appointmentAwait = await applicationDb.Appointments
+                .Include(h=>h.House)
+                .Include(u=>u.User)
+                .Where(x => x.AgentId == agentId && x.IsConfirmed == false)
+                .Select(appoint => new AppointmentAwaitingDTO
+                {
+                    Id = appoint.Id,
+                    FirstName = appoint.User.FirstName,
+                    LastName = appoint.User.LastName,
+                    AppointmentDate = appoint.AppointmentDate,
+                    PropertyName = appoint.House.Name,
+                    PropertyLocation = appoint.House.Location
+                }).ToListAsync();
+
+            return appointmentAwait!;
+        }
     }
 }

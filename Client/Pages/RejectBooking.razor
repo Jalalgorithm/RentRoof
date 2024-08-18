@@ -1,0 +1,38 @@
+﻿
+@page "/reject"
+
+@inject ConfirmBookingForAgent bookingForAgent
+
+@attribute [Authorize(Roles ="Agent")]
+
+<div class="container mt-5">
+    <div class="row justify-content-center">
+        <div class="col-md-8 col-lg-6">
+            <div class="card border-danger text-center">
+                <div class="card-header bg-danger text-white">
+                    <h4 class="mb-0">Rejection Confirmed</h4>
+                </div>
+                <div class="card-body">
+                    <div class="alert alert-danger" role="alert">
+                        <strong>We're sorry!</strong> @message
+                    </div>
+                   
+                    <a href="/" class="btn btn-danger">Go Back Home</a>
+                </div>
+                <div class="card-footer text-muted">
+                    Thank you for understanding.
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@code {
+
+    private string message { get; set; }
+
+    protected override void OnInitialized()
+    {
+        message = bookingForAgent.Message;
+    }
+}
