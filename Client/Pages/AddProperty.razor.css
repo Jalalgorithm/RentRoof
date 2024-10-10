@@ -1,0 +1,36 @@
+﻿@media (max-width: 576px) {
+    .form-control, .form-select {
+        font-size: 0.875rem;
+    }
+}
+
+input[type="file"] {
+    padding: 8px;
+    cursor: pointer;
+}
+
+button:disabled {
+    opacity: 0.6;
+}
+
+.container-lg {
+    padding-left: 15px;
+    padding-right: 15px;
+}
+
+.input-group-text {
+    background-color: #f8f9fa;
+}
+
+.input-group span i {
+    color: #6c757d;
+}
+
+.btn-primary {
+    background-color: #007bff;
+    border: none;
+}
+
+    .btn-primary:hover {
+        background-color: #0056b3;
+    }

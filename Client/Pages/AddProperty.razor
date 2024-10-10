@@ -16,115 +16,127 @@
 
 <div class="container-lg mt-2">
     <div class="text-center">
-        <h2>Add Property</h2>
-        <p class="lead">Add your home for rent , sale or lease.......</p>
+        <h2 class="display-6">Add Property</h2>
+        <p class="lead">Add your home for rent, sale, or lease...</p>
     </div>
-    
 </div>
 
 <div class="row justify-content-center my-5">
-
-    <div class="col-lg-6">
-        <EditForm Model="@houseRequestDTO" OnValidSubmit="AddNewProperty" OnInvalidSubmit="Failed">
-                <label for="Name" class="col-sm-2 col-form-label">Name</label>
+    <div class="col-md-8 col-lg-6">
+        <EditForm Model="@houseRequestDTO" OnValidSubmit="AddNewProperty" OnInvalidSubmit="Failed" class="needs-validation" novalidate>
+            <!-- Name -->
+            <label for="Name" class="form-label">Name</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-house-add-fill"></i>
                 </span>
-                <InputText id="title" @bind-Value="houseRequestDTO.Name" class="form-control" placeholder="Name of property" />
+                <InputText id="title" @bind-Value="houseRequestDTO.Name" class="form-control" placeholder="Name of property" required />
+                <div class="invalid-feedback">Please enter a property name.</div>
             </div>
 
+            <!-- Description -->
             <label for="Description" class="form-label">Description</label>
-            <div class="input-group  mb-3">
+            <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-card-text"></i>
                 </span>
-                <InputTextArea id="Location" @bind-Value="houseRequestDTO.Description" class="form-control" placeholder="Description of property" />
+                <InputTextArea id="Location" @bind-Value="houseRequestDTO.Description" class="form-control" placeholder="Description of property" required />
+                <div class="invalid-feedback">Please provide a description.</div>
             </div>
 
+            <!-- Location -->
             <label for="Location" class="form-label">Location</label>
-            <div class="input-group  mb-3">
+            <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-geo-alt-fill"></i>
                 </span>
-                <InputText id="Location" @bind-Value="houseRequestDTO.Location" class="form-control" placeholder="Location of property" />
+                <InputText id="Location" @bind-Value="houseRequestDTO.Location" class="form-control" placeholder="Location of property" required />
+                <div class="invalid-feedback">Please enter the location.</div>
             </div>
 
-
-            <label for="Propert Type" class="form-label">Property Type</label>
+            <!-- Property Type -->
+            <label for="PropertType" class="form-label">Property Type</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-receipt"></i>
                 </span>
-                <InputSelect id="propertyType" @bind-Value="houseRequestDTO.TypeofPropertyId" class="form-select">
-                    <option selected>Open this select menu</option>
+                <InputSelect id="propertyType" @bind-Value="houseRequestDTO.TypeofPropertyId" class="form-select" required>
+                    <option selected disabled>Open this select menu</option>
                     @foreach (var type in getPropertyTypes)
                     {
                         <option value="@type.Id">@type.PropertyName</option>
                     }
-
                 </InputSelect>
+                <div class="invalid-feedback">Please select a property type.</div>
             </div>
 
-
-           
-
+            <!-- Size -->
             <label for="Size" class="form-label">Size</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-arrows-angle-expand"></i>
                 </span>
-                <InputNumber id="Size" @bind-Value="houseRequestDTO.Size" class="form-control" placeholder="Size of property" />
+                <InputNumber id="Size" @bind-Value="houseRequestDTO.Size" class="form-control" placeholder="Size of property" required />
+                <div class="invalid-feedback">Please enter the size of the property.</div>
             </div>
 
+            <!-- Bathroom -->
             <div class="mb-3">
                 <label for="NumberOfBathroom" class="form-label">Bathroom</label>
-                <InputNumber id="NumberOfBathroom" @bind-Value="houseRequestDTO.NumberOfBathroom" class="form-control" placeholder="Enter a number" />
+                <InputNumber id="NumberOfBathroom" @bind-Value="houseRequestDTO.NumberOfBathroom" class="form-control" placeholder="Enter a number" required />
+                <div class="invalid-feedback">Please specify the number of bathrooms.</div>
             </div>
+
+            <!-- Bedroom -->
             <div class="mb-3">
                 <label for="NumberOfBedroom" class="form-label">Bedroom</label>
-                <InputNumber id="NumberOfBedroom" @bind-Value="houseRequestDTO.NumberOfBedroom" class="form-control" placeholder="Enter a number" />
+                <InputNumber id="NumberOfBedroom" @bind-Value="houseRequestDTO.NumberOfBedroom" class="form-control" placeholder="Enter a number" required />
+                <div class="invalid-feedback">Please specify the number of bedrooms.</div>
             </div>
 
-
-
+            <!-- Price -->
             <label for="Price" class="form-label">Price</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-tags-fill"></i>
                 </span>
-                <InputNumber id="Price" @bind-Value="houseRequestDTO.Price" class="form-control" placeholder="Price of Proerty" />
+                <InputNumber id="Price" @bind-Value="houseRequestDTO.Price" class="form-control" placeholder="Price of Property" required />
+                <div class="invalid-feedback">Please enter the price.</div>
             </div>
 
-            <label for="Propert Agenty" class="form-label">Agent</label>
+            <!-- Agent -->
+            <label for="Agent" class="form-label">Agent</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-receipt"></i>
                 </span>
-                <input id="disabledInput" type="text" class="form-control" placeholder="@agentProfile.FirstName  @agentProfile.LastName" disabled />
+                <input id="disabledInput" type="text" class="form-control" placeholder="@agentProfile.FirstName @agentProfile.LastName" disabled />
             </div>
 
-            <label for="Propert Mode" class="form-label">Mode</label>
+            <!-- Property Mode -->
+            <label for="Mode" class="form-label">Mode</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-receipt"></i>
                 </span>
-                <InputSelect id="mode" @bind-Value="houseRequestDTO.ModeId" class="form-select">
-                    <option selected>Open this select menu</option>
+                <InputSelect id="mode" @bind-Value="houseRequestDTO.ModeId" class="form-select" required>
+                    <option selected disabled>Open this select menu</option>
                     @foreach (var mode in modeResponses)
                     {
                         <option value="@mode.Id">@mode.Name</option>
                     }
-
                 </InputSelect>
+                <div class="invalid-feedback">Please select the mode.</div>
             </div>
 
-             <label for="image" class="form-label">Display Image</label>
+            <!-- Image Uploads -->
+            <label for="image" class="form-label">Display Image</label>
             <div class="input-group mb-3">
                 <span class="input-group-text">
                     <i class="bi bi-card-image"></i>
                 </span>
-                <InputFile id="image" OnChange="LoadImage" class="form-control" placeholder="Image of Property"  />
+                <InputFile id="image" OnChange="LoadImage" class="form-control" required />
+                <div class="invalid-feedback">Please upload an image.</div>
             </div>
 
             <label for="Otherimages" class="form-label">Other Images</label>
@@ -132,10 +144,12 @@
                 <span class="input-group-text">
                     <i class="bi bi-card-image"></i>
                 </span>
-                <InputFile id="Otherimages" OnChange="LoadOtherImages" class="form-control" placeholder="Other Images of Property" multiple   />
+                <InputFile id="Otherimages" OnChange="LoadOtherImages" class="form-control" multiple />
             </div>
-            <button type="submit" class="btn btn-primary" disabled="@isLoading"> 
-                @if(isLoading)
+
+            <!-- Submit Button -->
+            <button type="submit" class="btn btn-primary w-100" disabled="@isLoading">
+                @if (isLoading)
                 {
                     <div class="spinner-border" role="status">
                         <span class="visually-hidden">Loading...</span>
@@ -143,15 +157,10 @@
                 }
                 else
                 {
-                    <span>
-                        Add Property
-                    </span>
+                    <span>Add Property</span>
                 }
-
-                </button>
-
+            </button>
         </EditForm>
-
     </div>
 </div>
 

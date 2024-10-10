@@ -1,0 +1,97 @@
+﻿/* General Navbar structure */
+.navbar {
+    display: flex;
+    align-items: center; /* Ensure vertical alignment */
+    justify-content: space-between; /* Space between logo and other items */
+    padding: 0.5rem 1rem; /* Ensure padding for desktop and mobile */
+}
+
+/* Adjust the title for both desktop and mobile */
+.navbar-title {
+    font-size: 1.5rem; /* Adjust size for desktop */
+    margin-left: 10px; /* Space between logo and title */
+}
+
+.nav-link {
+    padding: 0.5rem 1rem; /* Adjust padding for uniform spacing */
+}
+
+/* Ensure nav items are properly aligned vertically */
+.navbar-nav .nav-item {
+    display: flex;
+    align-items: center; /* Center nav items vertically */
+}
+
+/* Custom button adjustments */
+.navbar .nav-item .btn {
+    max-width: 200px; /* Limit button width on desktop */
+    margin: 4px; /* Center buttons */
+    padding-top: 10px;
+    padding-bottom: 10px;
+    text-align: center;
+}
+
+.navbar-nav .main-button {
+    display: flex; /* Enables flexbox */
+    justify-content: center; /* Centers content horizontally */
+    width: 100%; /* Makes the element full width */
+    align-items: center; /* Centers content vertically (if needed) */
+    padding: 10px; /* Optional: Adds some padding */
+    margin: 0 auto;
+}
+
+/* Ensure dropdown menu is aligned properly */
+.navbar .dropdown-menu {
+    right: 0; /* Align dropdown to the right */
+    left: auto; /* Prevent it from skewing to the left */
+}
+
+/* Responsive adjustments for smaller screens */
+@media (max-width: 768px) {
+    .navbar-title {
+        font-size: 1.2rem; /* Reduce title size on mobile */
+    }
+
+    .navbar-collapse {
+        align-items: center; /* Center items in mobile view */
+    }
+
+    .navbar .btn {
+        width: 80%; /* Buttons take most width in mobile, but not full width */
+        margin-top: 10px; /* Add margin between buttons */
+    }
+    
+
+    .navbar .add-property {
+        width: 100%; /* Ensure 'Add Property' button takes up full width on mobile */
+        margin: 10px 0; /* Add margin to space it out */
+    }
+
+  
+}
+
+/* Fix My Profile dropdown alignment */
+.navbar .dropdown-menu-end {
+    right: 0; /* Align the dropdown to the far right */
+    left: auto; /* Make sure it's not skewed to the left */
+}
+
+/* Additional fix for centering buttons in the mobile view */
+@media (max-width: 768px) {
+    .navbar .dropdown-menu {
+        right: 0; /* Align dropdown to the right */
+        left: auto;
+    }
+    
+    /* Optional: Ensure dropdown items are aligned and centered properly */
+    .navbar .dropdown-item {
+        text-align: left;
+        padding: 10px 15px; /* Adjust padding if necessary */
+    }
+
+    /* Ensure that the dropdown itself doesn't behave as a flexbox element */
+    .navbar .dropdown {
+        display: block;
+        width: 100%;
+    }
+}
